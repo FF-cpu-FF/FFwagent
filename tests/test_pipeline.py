@@ -371,3 +371,69 @@ def test_browser_kennung_sendet_stimmige_kopfzeilen():
     eigene = baue("wg_gesucht", {"aktiv": True}, profil)
     assert "Sec-Fetch-Mode" not in eigene.session.headers
     assert "wohnungsagent" in eigene.session.headers["User-Agent"]
+
+
+def test_ausschlussgruende_werden_zusammengefasst(capsys=None):
+    """Bei 51 von 56 aussortierten Inseraten ist die Verteilung der Gründe
+    die wichtigste Information des Laufs – sie muss auch im Probelauf
+    erscheinen, nicht nur im echten Durchlauf."""
+    from wohnungsagent.services.pipeline import protokolliere_ausschluesse
+
+    pipeline = _pipeline()
+    rohdaten = [
+        roh("3 Zimmer Nordend", "Ab sofort frei.", externe_id="a",
+            stadtteil="Nordend-West", warmmiete=1500.0, zimmer=3.0, flaeche=80.0),
+        roh("3 Zimmer Bornheim", "Frei ab 01.03.2027.", externe_id="b",
+            stadtteil="Bornheim", warmmiete=1500.0, zimmer=3.0, flaeche=80.0),
+    ]
+    angereichert = [pipeline.reichere_an(i) for i in rohdaten]
+    _, verworfen = pipeline.bewerte(angereichert)
+
+    assert len(verworfen) == 2
+    protokolliere_ausschluesse(verworfen)      # darf nicht abstürzen
+    gruende = {i.bewertung.ausschlussgrund.split(" (")[0] for i in verworfen}
+    assert any("Einzug zu früh" in g for g in gruende)
+
+
+# ------------------------------------------------------------- Zeitzonen
+
+def test_zeitstempel_ohne_zeitzone_werden_angeglichen():
+    """Regression aus dem ersten echten GitHub-Lauf.
+
+    SQLite speichert Zeitstempel ohne Zeitzone, im Programm wird mit UTC
+    gerechnet. Beim Export nach dem ersten Schreiben in die Datenbank
+    scheiterte deshalb `ist_neu` mit
+    "can't subtract offset-naive and offset-aware datetimes".
+    Der Probelauf berührte die Datenbank nie und übersah das.
+    """
+    from datetime import datetime, timedelta, timezone
+
+    from wohnungsagent.models.domain import als_utc
+
+    naiv = datetime(2026, 8, 3, 10, 0, 0)
+    assert als_utc(naiv).tzinfo is timezone.utc
+    assert als_utc(None) is None
+
+    behaftet = datetime(2026, 8, 3, 10, 0, 0, tzinfo=timezone.utc)
+    assert als_utc(behaftet) == behaftet
+
+    # So kommt ein Inserat aus der Datenbank zurück: ohne Zeitzone.
+    frisch = roh("Testwohnung", "", warmmiete=1500.0)
+    frisch.erstmals_gesehen = datetime.utcnow()
+    assert frisch.ist_neu is True
+    assert frisch.als_dict()["erstmals_gesehen"]          # darf nicht werfen
+
+    alt = roh("Alte Wohnung", "", warmmiete=1500.0)
+    alt.erstmals_gesehen = datetime.utcnow() - timedelta(days=3)
+    assert alt.ist_neu is False
+
+
+def test_laufergebnis_dauer_mit_naiven_zeitstempeln():
+    from datetime import datetime
+
+    from wohnungsagent.models.domain import Laufergebnis
+
+    ergebnis = Laufergebnis()
+    ergebnis.gestartet = datetime.utcnow()
+    ergebnis.beendet = None
+    assert ergebnis.dauer_s >= 0                # ohne Zeitzone, darf nicht werfen

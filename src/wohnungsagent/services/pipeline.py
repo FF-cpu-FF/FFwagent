@@ -229,7 +229,7 @@ class Pipeline:
         treffer, verworfen = self.bewerte(eindeutig)
         ergebnis.ausgeschlossen = len(verworfen)
         ergebnis.treffer = len(treffer)
-        _protokolliere_ausschluesse(verworfen)
+        protokolliere_ausschluesse(verworfen)
 
         ergebnis.ki_aufrufe, ergebnis.ki_tokens = self.bewerte_mit_ki(treffer, ki_limit)
 
@@ -276,7 +276,7 @@ class Pipeline:
         return ergebnis
 
 
-def _protokolliere_ausschluesse(verworfen: list[Inserat]) -> None:
+def protokolliere_ausschluesse(verworfen: list[Inserat]) -> None:
     """Zeigt, woran es lag – sonst sucht man bei null Treffern im Dunkeln."""
     
     zaehler = Counter(

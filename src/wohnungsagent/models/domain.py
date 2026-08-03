@@ -22,6 +22,22 @@ def jetzt() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def als_utc(zeitpunkt: datetime | None) -> datetime | None:
+    """Ergänzt eine fehlende Zeitzone als UTC.
+
+    SQLite kennt keine Zeitzonen und gibt Zeitstempel ohne sie zurück,
+    während im Programm durchgehend mit UTC-behafteten Werten gerechnet
+    wird. Ohne diese Angleichung scheitert jede Subtraktion mit
+    "can't subtract offset-naive and offset-aware datetimes" – und zwar
+    erst nach dem ersten Schreiben in die Datenbank, nicht im Probelauf.
+    """
+    if zeitpunkt is None:
+        return None
+    if zeitpunkt.tzinfo is None:
+        return zeitpunkt.replace(tzinfo=timezone.utc)
+    return zeitpunkt.astimezone(timezone.utc)
+
+
 class Einzugsstatus(str, Enum):
     """Dreiwertig – "unbekannt" ist ein eigener Zustand, kein stiller Fehlschlag."""
 
@@ -185,7 +201,10 @@ class Inserat:
 
     @property
     def ist_neu(self) -> bool:
-        return (jetzt() - self.erstmals_gesehen).total_seconds() < 86_400
+        gesehen = als_utc(self.erstmals_gesehen)
+        if gesehen is None:
+            return False
+        return (jetzt() - gesehen).total_seconds() < 86_400
 
     def als_dict(self) -> dict[str, Any]:
         return {
@@ -219,8 +238,8 @@ class Inserat:
             "beschreibung": self.beschreibung[:1200],
             "bilder": self.bilder[:8],
             "merkmale": self.merkmale,
-            "erstmals_gesehen": self.erstmals_gesehen.isoformat(timespec="seconds"),
-            "zuletzt_gesehen": self.zuletzt_gesehen.isoformat(timespec="seconds"),
+            "erstmals_gesehen": als_utc(self.erstmals_gesehen).isoformat(timespec="seconds"),
+            "zuletzt_gesehen": als_utc(self.zuletzt_gesehen).isoformat(timespec="seconds"),
             "ist_neu": self.ist_neu,
             "score": self.bewertung.score,
             "score_treffer": self.bewertung.treffer,
@@ -270,4 +289,5 @@ class Laufergebnis:
 
     @property
     def dauer_s(self) -> float:
-        return ((self.beendet or jetzt()) - self.gestartet).total_seconds()
+        ende = als_utc(self.beendet) or jetzt()
+        return (ende - als_utc(self.gestartet)).total_seconds()

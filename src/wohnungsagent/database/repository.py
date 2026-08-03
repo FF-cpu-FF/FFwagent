@@ -23,6 +23,7 @@ from ..models.domain import (
     Laufergebnis,
     Preisaenderung,
     Vermietertyp,
+    als_utc,
 )
 
 PREISFELDER = ("kaltmiete", "warmmiete", "nebenkosten")
@@ -143,7 +144,8 @@ class Repository:
             sitzung.commit()
 
     def raeume_auf(self, tage: int) -> int:
-        grenze = datetime.now(timezone.utc) - timedelta(days=tage)
+        # Die Spalte ist zeitzonenlos, deshalb hier bewusst naiv vergleichen.
+        grenze = (datetime.now(timezone.utc) - timedelta(days=tage)).replace(tzinfo=None)
         with self.sitzung() as sitzung:
             ergebnis = sitzung.execute(
                 delete(InseratRow).where(
@@ -204,7 +206,8 @@ class Repository:
                 select(PreisRow).where(PreisRow.uid == uid).order_by(PreisRow.zeitpunkt)
             ).all()
             return [
-                Preisaenderung(uid=z.uid, zeitpunkt=z.zeitpunkt, feld=z.feld, alt=z.alt, neu=z.neu)
+                Preisaenderung(uid=z.uid, zeitpunkt=als_utc(z.zeitpunkt), feld=z.feld,
+                               alt=z.alt, neu=z.neu)
                 for z in zeilen
             ]
 
@@ -297,8 +300,8 @@ def _nach_domaene(zeile: InseratRow) -> Inserat:
         beschreibung=zeile.beschreibung or "",
         bilder=list(zeile.bilder or []),
         merkmale=list(zeile.merkmale or []),
-        erstmals_gesehen=zeile.erstmals_gesehen,
-        zuletzt_gesehen=zeile.zuletzt_gesehen,
+        erstmals_gesehen=als_utc(zeile.erstmals_gesehen),
+        zuletzt_gesehen=als_utc(zeile.zuletzt_gesehen),
     )
     inserat.bewertung = Bewertung(
         score=zeile.score,

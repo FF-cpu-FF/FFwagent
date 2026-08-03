@@ -59,12 +59,30 @@ def befehl_scan(args) -> int:
             len(roh), ergebnis.unbrauchbar, len(eindeutig),
             len(treffer), len(verworfen),
         )
+        from .services.pipeline import protokolliere_ausschluesse
+
+        protokolliere_ausschluesse(verworfen)
+
         for inserat in sorted(treffer, key=lambda i: i.bewertung.score, reverse=True)[:15]:
+            # Kleinanzeigen nennt die Kaltmiete, WG-Gesucht die Warmmiete.
+            # Nur eine davon anzuzeigen ließ jede zweite Zeile wie ein
+            # Datenfehler aussehen.
+            if inserat.warmmiete:
+                preis = f"{inserat.warmmiete:.0f} € warm"
+            elif inserat.kaltmiete:
+                preis = f"{inserat.kaltmiete:.0f} € kalt"
+            else:
+                preis = "Preis offen"
+            groesse = " ".join(
+                teil for teil in (
+                    f"{inserat.zimmer:g} Zi." if inserat.zimmer else "",
+                    f"{inserat.flaeche:.0f} m²" if inserat.flaeche else "",
+                    f"{inserat.distanz_km:.1f} km" if inserat.distanz_km is not None else "",
+                ) if teil
+            )
             logger.info(
-                "  [{:3d}] {} | {} | {}",
-                inserat.bewertung.score, inserat.titel[:55],
-                f"{inserat.warmmiete:.0f} €" if inserat.warmmiete else "? €",
-                inserat.url,
+                "  [{:3d}] {:52s} | {:14s} | {:22s} | {}",
+                inserat.bewertung.score, inserat.titel[:52], preis, groesse, inserat.url,
             )
         return 0
 
