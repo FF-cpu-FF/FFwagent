@@ -184,3 +184,42 @@ def test_immowelt_leere_karten_gelten_als_unbrauchbar(profil):
     treffer = scraper.parse_seite(html, Suchseite("x"))
     assert all(not i.ist_brauchbar for i in treffer), \
         "leere Exposé-Hüllen dürfen nicht als verwertbar gelten"
+
+
+WG_HTML_OHNE_PREIS_TAG = """
+<html><body>
+<div class="wgg_card offer_list_item">
+  <div class="card_body">
+    <h3 class="truncate_title">
+      <a href="/wohnungen-in-Frankfurt-am-Main-Westend.13847559.html">
+        Geraeumige Dachgeschosswohnung in Bestlage
+      </a>
+    </h3>
+    <div class="col-xs-11"><span>Frankfurt am Main Westend-Nord</span></div>
+    <div class="card_footer">
+      <span>Groesse: 90m²</span>
+      <span>Gesamtmiete: 1.600 €</span>
+      <span>Zimmer: 3</span>
+    </div>
+  </div>
+</div>
+</body></html>
+"""
+
+
+def test_wg_gesucht_liest_preis_auch_ohne_bekannten_tag(profil):
+    """Regression: die Gesamtmiete stand nicht in <b>, sondern im Fusstext.
+    Dadurch blieb warmmiete leer und im Dashboard stand ueberall '– €'."""
+    scraper = baue("wg_gesucht", dict(profil.quellen["wg_gesucht"]), profil)
+    inserat = scraper.parse_seite(WG_HTML_OHNE_PREIS_TAG, Suchseite("x"))[0]
+
+    assert inserat.warmmiete == 1600.0
+    assert inserat.flaeche == 90.0
+    assert inserat.zimmer == 3.0
+    assert inserat.ist_brauchbar
+
+
+def test_wg_gesucht_tausenderpunkt(profil):
+    scraper = baue("wg_gesucht", dict(profil.quellen["wg_gesucht"]), profil)
+    html = WG_HTML_OHNE_PREIS_TAG.replace("1.600 €", "980 €")
+    assert scraper.parse_seite(html, Suchseite("x"))[0].warmmiete == 980.0

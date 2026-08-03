@@ -17,10 +17,32 @@ from collections.abc import Iterator
 from bs4 import BeautifulSoup
 
 from ..models.domain import Inserat
-from ..services.parsing import dezimal, euro
+from ..services.parsing import euro
 from .base import Scraper, Suchseite
 
 BASIS = "https://www.wg-gesucht.de"
+
+# "1.600 €", "980 EUR" – der erste Betrag auf der Karte ist die Miete
+# Kein \b hinter dem Währungszeichen: zwischen "€" und einem Leerzeichen
+# gibt es keine Wortgrenze, das Muster hätte nie gegriffen. Stattdessen
+# vorne absichern, damit nicht die zweite Hälfte einer längeren Zahl trifft.
+_PREIS = re.compile(r"(?<![\d.,])(\d{1,3}(?:\.\d{3})+|\d{2,5})\s*(?:€|EUR)", re.I)
+_FLAECHE = re.compile(r"(\d{1,4}(?:[.,]\d+)?)\s*(?:m²|m2|qm)\b", re.I)
+# Beide Schreibweisen: "3 Zimmer" und "Zimmer: 3"
+_ZIMMER = re.compile(r"(\d{1,2}(?:[.,]\d)?)\s*Zi(?:\.|mmer)?\b", re.I)
+_ZIMMER_NACHGESTELLT = re.compile(r"Zi(?:\.|mmer)\s*:?\s*(\d{1,2}(?:[.,]\d)?)", re.I)
+
+
+def _erstes_muster(muster: re.Pattern[str], text: str) -> float | None:
+    treffer = muster.search(text)
+    if not treffer:
+        return None
+    roh = treffer.group(1).replace(".", "") if "." in treffer.group(1) and "," not in treffer.group(1) else treffer.group(1)
+    try:
+        wert = float(roh.replace(",", "."))
+    except ValueError:
+        return None
+    return wert if 0 < wert < 20_000 else None
 TYP_PFAD = {
     0: "wg-zimmer",
     1: "1-zimmer-wohnungen",
@@ -69,17 +91,20 @@ class WgGesucht(Scraper):
 
             volltext = karte.get_text(" ", strip=True)
 
+            # Alle drei Werte aus dem Kartentext lesen statt aus bestimmten
+            # CSS-Klassen. WG-Gesucht verschiebt die Preisangabe regelmäßig
+            # zwischen <b>, .card_price und .detail-size-price-wrapper; die
+            # Schreibweise "1.600 €" bleibt dieselbe.
             preis_el = karte.select_one("b.noprint, .card_price b, .detail-size-price-wrapper b")
             warmmiete = euro(preis_el.get_text() if preis_el else None)
+            if warmmiete is None:
+                warmmiete = _erstes_muster(_PREIS, volltext)
 
-            flaeche = None
-            if (qm := re.search(r"(\d+)\s*m²", volltext)):
-                flaeche = float(qm.group(1))
+            flaeche = _erstes_muster(_FLAECHE, volltext)
 
-            zimmer = None
-            if (zi := re.search(r"(\d+(?:[.,]\d)?)\s*Zimmer", volltext)):
-                zimmer = dezimal(zi.group(1))
-            elif "1-zimmer" in url.lower():
+            zimmer = (_erstes_muster(_ZIMMER, volltext)
+                      or _erstes_muster(_ZIMMER_NACHGESTELLT, volltext))
+            if zimmer is None and "1-zimmer" in url.lower():
                 zimmer = 1.0
 
             stadtteil = None
