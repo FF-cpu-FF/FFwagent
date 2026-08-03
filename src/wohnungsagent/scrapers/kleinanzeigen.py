@@ -10,6 +10,7 @@ import re
 from collections.abc import Iterator
 
 from bs4 import BeautifulSoup
+
 from loguru import logger
 
 from ..models.domain import Inserat
@@ -19,7 +20,7 @@ from .base import Scraper, Suchseite
 BASIS = "https://www.kleinanzeigen.de"
 
 # "3 Zi.", "2,5 Zimmer", "1 Zi" – aber nicht die Hausnummer in "Zimmerstr. 4"
-_ZIMMER = re.compile(r"(\d{1,2}(?:[.,]\d)?)\s*Zi(?:\.|mmer)?\b", re.I)
+_ZIMMER = re.compile(r"(\d{1,2}(?:[.,]\d)?)\s*[-\s]?\s*Zi(?:\.|mmer)?\b", re.I)
 # "75 m²", "67,8 m2", "80 qm"
 _FLAECHE = re.compile(r"(\d{1,4}(?:[.,]\d+)?)\s*(?:m²|m2|qm)\b", re.I)
 

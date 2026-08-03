@@ -223,3 +223,23 @@ def test_wg_gesucht_tausenderpunkt(profil):
     scraper = baue("wg_gesucht", dict(profil.quellen["wg_gesucht"]), profil)
     html = WG_HTML_OHNE_PREIS_TAG.replace("1.600 €", "980 €")
     assert scraper.parse_seite(html, Suchseite("x"))[0].warmmiete == 980.0
+
+
+@pytest.mark.parametrize(
+    "titel, erwartet",
+    [
+        ("Moderne 4-Zi-Neubauwohnung in Bockenheim", 4.0),
+        ("Schöne 3-Zimmer-Wohnung im Nordend", 3.0),
+        ("Helle 2,5 Zi. Altbau", 2.5),
+        ("3 Zimmer | Frankfurt am Main Nordend-West", 3.0),
+    ],
+)
+def test_zimmerzahl_mit_bindestrich(profil, titel, erwartet):
+    """Regression: WG-Gesucht schreibt die Zimmerzahl im Titel mit
+    Bindestrich ("4-Zi-Neubauwohnung"). Das Muster verlangte ein
+    Leerzeichen und lieferte durchgehend None."""
+    scraper = baue("wg_gesucht", dict(profil.quellen["wg_gesucht"]), profil)
+    html = WG_HTML_OHNE_PREIS_TAG.replace(
+        "Geraeumige Dachgeschosswohnung in Bestlage", titel
+    ).replace("<span>Zimmer: 3</span>", "")
+    assert scraper.parse_seite(html, Suchseite("x"))[0].zimmer == erwartet

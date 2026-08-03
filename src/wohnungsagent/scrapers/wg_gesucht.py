@@ -29,7 +29,10 @@ BASIS = "https://www.wg-gesucht.de"
 _PREIS = re.compile(r"(?<![\d.,])(\d{1,3}(?:\.\d{3})+|\d{2,5})\s*(?:€|EUR)", re.I)
 _FLAECHE = re.compile(r"(\d{1,4}(?:[.,]\d+)?)\s*(?:m²|m2|qm)\b", re.I)
 # Beide Schreibweisen: "3 Zimmer" und "Zimmer: 3"
-_ZIMMER = re.compile(r"(\d{1,2}(?:[.,]\d)?)\s*Zi(?:\.|mmer)?\b", re.I)
+# WG-Gesucht schreibt die Zimmerzahl oft im Titel und dort mit Bindestrich:
+# "4-Zi-Neubauwohnung", "3-Zimmer-Wohnung". Das Trennzeichen muss deshalb
+# auch ein Bindestrich sein duerfen, nicht nur ein Leerzeichen.
+_ZIMMER = re.compile(r"(\d{1,2}(?:[.,]\d)?)\s*[-\s]?\s*Zi(?:\.|mmer)?\b", re.I)
 _ZIMMER_NACHGESTELLT = re.compile(r"Zi(?:\.|mmer)\s*:?\s*(\d{1,2}(?:[.,]\d)?)", re.I)
 
 
