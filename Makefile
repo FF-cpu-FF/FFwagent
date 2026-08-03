@@ -40,3 +40,12 @@ docker:
 
 sauber:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache **/__pycache__
+
+hoch:              ## pruefen, committen, hochladen: make hoch M="Nachricht"
+	ruff check --fix src tests dashboard
+	ruff check src tests dashboard
+	pytest -q
+	git add -A
+	git commit -m "$(M)"
+	git pull
+	git push

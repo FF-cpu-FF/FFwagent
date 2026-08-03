@@ -141,27 +141,29 @@ def lies_detail(html: str, inserat: Inserat) -> Inserat:
 
     # --- Geldbeträge ---
     for muster, feld in GELDFELDER:
-        if getattr(inserat, feld) is None:
-            if (betrag := _betrag_hinter(text, muster)):
-                setattr(inserat, feld, betrag)
+        if getattr(inserat, feld) is None and (betrag := _betrag_hinter(text, muster)):
+            setattr(inserat, feld, betrag)
 
     if inserat.warmmiete is None and inserat.kaltmiete and inserat.nebenkosten:
         inserat.warmmiete = round(inserat.kaltmiete + inserat.nebenkosten, 2)
 
     # --- Eckdaten nachtragen, wo sie fehlten ---
-    if inserat.flaeche is None:
-        if (t := re.search(r"(?:gr[öo][ßs]e|wohnfl[äa]che)\s*:?\s*(\d{1,4}(?:[.,]\d+)?)\s*m", text, re.I)):
-            inserat.flaeche = float(t.group(1).replace(",", "."))
-    if inserat.zimmer is None:
-        if (t := re.search(r"zimmer\s*:?\s*(\d{1,2}(?:[.,]\d)?)\b", text, re.I)):
-            inserat.zimmer = float(t.group(1).replace(",", "."))
+    if inserat.flaeche is None and (
+        t := re.search(r"(?:gr[öo][ßs]e|wohnfl[äa]che)\s*:?\s*(\d{1,4}(?:[.,]\d+)?)\s*m", text, re.I)
+    ):
+        inserat.flaeche = float(t.group(1).replace(",", "."))
+    if inserat.zimmer is None and (
+        t := re.search(r"zimmer\s*:?\s*(\d{1,2}(?:[.,]\d)?)\b", text, re.I)
+    ):
+        inserat.zimmer = float(t.group(1).replace(",", "."))
 
     # --- Adresse ---
-    if not inserat.adresse:
-        if (t := re.search(r"([A-ZÄÖÜ][\wäöüß.\- ]{4,40}(?:stra[ßs]e|str\.|weg|allee|platz|gasse))"
-                           r"\s*(?:\d{1,4}[a-z]?)?\s*,?\s*(6[05]\d{3})", text)):
-            inserat.adresse = f"{t.group(1).strip()}, {t.group(2)}"
-            inserat.plz = inserat.plz or t.group(2)
+    if not inserat.adresse and (
+        t := re.search(r"([A-ZÄÖÜ][\wäöüß.\- ]{4,40}(?:stra[ßs]e|str\.|weg|allee|platz|gasse))"
+                       r"\s*(?:\d{1,4}[a-z]?)?\s*,?\s*(6[05]\d{3})", text)
+    ):
+        inserat.adresse = f"{t.group(1).strip()}, {t.group(2)}"
+        inserat.plz = inserat.plz or t.group(2)
 
     # --- Bilder: in der Liste steht meist nur eins ---
     detailbilder = _bilder(suppe, inserat.url)

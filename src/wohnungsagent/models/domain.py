@@ -13,13 +13,13 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
-from enum import Enum
+from datetime import UTC, date, datetime
+from enum import StrEnum
 from typing import Any
 
 
 def jetzt() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def als_utc(zeitpunkt: datetime | None) -> datetime | None:
@@ -34,11 +34,11 @@ def als_utc(zeitpunkt: datetime | None) -> datetime | None:
     if zeitpunkt is None:
         return None
     if zeitpunkt.tzinfo is None:
-        return zeitpunkt.replace(tzinfo=timezone.utc)
-    return zeitpunkt.astimezone(timezone.utc)
+        return zeitpunkt.replace(tzinfo=UTC)
+    return zeitpunkt.astimezone(UTC)
 
 
-class Einzugsstatus(str, Enum):
+class Einzugsstatus(StrEnum):
     """Dreiwertig – "unbekannt" ist ein eigener Zustand, kein stiller Fehlschlag."""
 
     PASST = "passt"            # belegtes Datum ab dem Stichtag
@@ -46,7 +46,7 @@ class Einzugsstatus(str, Enum):
     UNBEKANNT = "unbekannt"    # kein Datum im Inserat auffindbar
 
 
-class Vermietertyp(str, Enum):
+class Vermietertyp(StrEnum):
     PRIVAT = "privat"
     GEWERBLICH = "gewerblich"
     UNBEKANNT = "unbekannt"

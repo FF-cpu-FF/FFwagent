@@ -13,3 +13,13 @@ venv/
 .ruff_cache/
 .mypy_cache/
 .DS_Store
+
+# Von "pip install -e ." erzeugt
+*.egg-info/
+build/
+dist/
+
+# Von "pip install -e ." erzeugt
+*.egg-info/
+build/
+dist/

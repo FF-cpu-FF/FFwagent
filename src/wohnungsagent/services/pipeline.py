@@ -12,12 +12,11 @@ das spart den Großteil der Kosten.
 from __future__ import annotations
 
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 import requests
 from loguru import logger
-
-from typing import TYPE_CHECKING
 
 from ..config.profil import Suchprofil
 from ..llm.client import LlmClient
@@ -37,7 +36,7 @@ class Pipeline:
     def __init__(
         self,
         profil: Suchprofil,
-        repository: "Repository",
+        repository: Repository,
         llm: LlmClient | None = None,
         geocoding: bool = False,
     ) -> None:
@@ -79,7 +78,7 @@ class Pipeline:
                     scraper.label, code,
                 )
                 ergebnis.quellen_fehler[scraper.name] = f"HTTP {code}"
-            except Exception as fehler:  # noqa: BLE001 – eine Quelle kippt nie den Lauf
+            except Exception as fehler:
                 logger.exception("{} unerwartet fehlgeschlagen", scraper.label)
                 ergebnis.quellen_fehler[scraper.name] = f"{type(fehler).__name__}: {fehler}"
 
@@ -127,7 +126,7 @@ class Pipeline:
         if (schluessel := geodienst.normalisiere_stadtteil(inserat.stadtteil or inserat.adresse)):
             inserat.stadtteil = geodienst.anzeigename(schluessel)
 
-        inserat.zuletzt_gesehen = datetime.now(timezone.utc)
+        inserat.zuletzt_gesehen = datetime.now(UTC)
         return inserat
 
     def aufbereiten(self, roh: list[Inserat], ergebnis: Laufergebnis) -> list[Inserat]:
@@ -185,7 +184,7 @@ class Pipeline:
                 html = scraper.hole(inserat.url)
                 detailseiten.lies_detail(html, inserat)
                 gelesen += 1
-            except Exception as fehler:  # noqa: BLE001 – ein Ausfall kippt nichts
+            except Exception as fehler:
                 logger.debug("Detailseite {} nicht lesbar: {}", inserat.url, fehler)
 
         logger.info("{} Detailseiten gelesen", gelesen)
@@ -250,7 +249,7 @@ class Pipeline:
                 i.uid for i in self.repo.alle(limit=2000)
                 if i.uid in uids and i.ki and i.ki.zusammenfassung
             }
-        except Exception:  # noqa: BLE001 – im Zweifel lieber neu bewerten
+        except Exception:
             return set()
 
     # ---------------------------------------------------------- Durchlauf
@@ -314,7 +313,7 @@ class Pipeline:
         if entfernt:
             logger.info("{} veraltete Inserate entfernt", entfernt)
 
-        ergebnis.beendet = datetime.now(timezone.utc)
+        ergebnis.beendet = datetime.now(UTC)
         self.repo.protokolliere_lauf(ergebnis)
         logger.success(
             "Lauf beendet in {:.0f}s: {} roh -> {} eindeutig -> {} Treffer, davon {} neu",
@@ -330,7 +329,7 @@ class Pipeline:
 
 def protokolliere_ausschluesse(verworfen: list[Inserat]) -> None:
     """Zeigt, woran es lag – sonst sucht man bei null Treffern im Dunkeln."""
-    
+
     zaehler = Counter(
         (i.bewertung.ausschlussgrund or "").split(" (")[0].split(":")[0] for i in verworfen
     )

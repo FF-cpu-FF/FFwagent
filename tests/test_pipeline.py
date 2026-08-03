@@ -188,7 +188,7 @@ def test_inserat_ohne_jede_angabe_wird_nicht_ausgeschlossen():
     """Unvollständige Inserate sollen sichtbar bleiben, nur schlechter ranken."""
     pipeline = _pipeline()
     duenn = pipeline.reichere_an(roh("Wohnung Nordend", "", stadtteil="Nordend-West"))
-    treffer, verworfen = pipeline.bewerte([duenn])
+    treffer, _ = pipeline.bewerte([duenn])
     assert len(treffer) == 1
     assert treffer[0].bewertung.score < 60
 
@@ -406,34 +406,34 @@ def test_zeitstempel_ohne_zeitzone_werden_angeglichen():
     "can't subtract offset-naive and offset-aware datetimes".
     Der Probelauf berührte die Datenbank nie und übersah das.
     """
-    from datetime import datetime, timedelta, timezone
+    from datetime import UTC, datetime, timedelta
 
     from wohnungsagent.models.domain import als_utc
 
     naiv = datetime(2026, 8, 3, 10, 0, 0)
-    assert als_utc(naiv).tzinfo is timezone.utc
+    assert als_utc(naiv).tzinfo is UTC
     assert als_utc(None) is None
 
-    behaftet = datetime(2026, 8, 3, 10, 0, 0, tzinfo=timezone.utc)
+    behaftet = datetime(2026, 8, 3, 10, 0, 0, tzinfo=UTC)
     assert als_utc(behaftet) == behaftet
 
     # So kommt ein Inserat aus der Datenbank zurück: ohne Zeitzone.
     frisch = roh("Testwohnung", "", warmmiete=1500.0)
-    frisch.erstmals_gesehen = datetime.utcnow()
+    frisch.erstmals_gesehen = datetime.now(UTC).replace(tzinfo=None)
     assert frisch.ist_neu is True
     assert frisch.als_dict()["erstmals_gesehen"]          # darf nicht werfen
 
     alt = roh("Alte Wohnung", "", warmmiete=1500.0)
-    alt.erstmals_gesehen = datetime.utcnow() - timedelta(days=3)
+    alt.erstmals_gesehen = datetime.now(UTC).replace(tzinfo=None) - timedelta(days=3)
     assert alt.ist_neu is False
 
 
 def test_laufergebnis_dauer_mit_naiven_zeitstempeln():
-    from datetime import datetime
+    from datetime import UTC, datetime
 
     from wohnungsagent.models.domain import Laufergebnis
 
     ergebnis = Laufergebnis()
-    ergebnis.gestartet = datetime.utcnow()
+    ergebnis.gestartet = datetime.now(UTC).replace(tzinfo=None)
     ergebnis.beendet = None
     assert ergebnis.dauer_s >= 0                # ohne Zeitzone, darf nicht werfen

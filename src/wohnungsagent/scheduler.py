@@ -32,7 +32,7 @@ def starte_dienst(args) -> None:
         try:
             pipeline.laufe(mindestscore=getattr(args, "mindestscore", 0))
             exportiere(repo)
-        except Exception:  # noqa: BLE001 – der Dienst darf an keinem Lauf sterben
+        except Exception:
             logger.exception("Durchlauf fehlgeschlagen, weiter beim nächsten Intervall")
 
     planer = BlockingScheduler(timezone="Europe/Berlin")

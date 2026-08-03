@@ -18,7 +18,7 @@ from __future__ import annotations
 import json
 import os
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from loguru import logger
 
@@ -90,7 +90,7 @@ class LlmClient:
         try:
             rohtext = self._frage(baue_nutzeranfrage(inserat, self.profil))
             daten = _json_aus(rohtext)
-        except Exception as fehler:  # noqa: BLE001 – KI darf den Lauf nie kippen
+        except Exception as fehler:
             logger.warning("KI-Bewertung für {} fehlgeschlagen: {}", inserat.uid, fehler)
             return None
         if not daten:
@@ -107,7 +107,7 @@ class LlmClient:
             fehlende_angaben=[str(w)[:80] for w in (daten.get("fehlende_angaben") or [])][:5],
             punkte_delta=max(-grenze, min(grenze, delta)),
             modell=self.modell,
-            erzeugt_am=datetime.now(timezone.utc),
+            erzeugt_am=datetime.now(UTC),
         )
 
     def _frage(self, anfrage: str) -> str:

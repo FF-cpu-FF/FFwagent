@@ -10,7 +10,6 @@ import re
 from collections.abc import Iterator
 
 from bs4 import BeautifulSoup
-
 from loguru import logger
 
 from ..models.domain import Inserat

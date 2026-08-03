@@ -161,8 +161,9 @@ def entdoppeln(inserate: list[Inserat], schwelle: float = SCHWELLE) -> list[Inse
         if gruppe.dubletten:
             weitere = sorted({d.quelle for d in gruppe.dubletten} - {gruppe.beste.quelle})
             if weitere:
-                gruppe.beste.merkmale = list(gruppe.beste.merkmale) + [
-                    f"auch auf: {', '.join(weitere)}"
+                gruppe.beste.merkmale = [
+                    *gruppe.beste.merkmale,
+                    f"auch auf: {', '.join(weitere)}",
                 ]
         ergebnis.append(gruppe.beste)
     return ergebnis
