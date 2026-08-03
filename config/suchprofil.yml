@@ -1,0 +1,237 @@
+# =============================================================================
+#  Suchprofil – die einzige Datei, die du für den Alltagsbetrieb anfassen musst.
+#  Alle Werte werden beim Start gegen das Pydantic-Schema in
+#  src/wohnungsagent/config/profil.py validiert.
+# =============================================================================
+
+referenzpunkt:
+  name: "Frankfurt School of Finance & Management"
+  adresse: "Adickesallee 32-34, 60322 Frankfurt am Main"
+  lat: 50.132951
+  lon: 8.680720
+  # Luftlinie. Fußweg/ÖPNV liegen erfahrungsgemäß 20–30 % darüber.
+  max_km: 3.0
+  bonus_km: 2.0            # unterhalb dieser Distanz gibt es Extrapunkte
+
+lage:
+  # Kanonische Namen; Schreibvarianten der Portale werden in
+  # services/geo.py über STADTTEIL_ALIASE aufgelöst.
+  bevorzugt:
+    - Nordend-West
+    - Nordend-Ost
+    - Westend-Nord
+  # Ausschluss außerhalb dieser Liste. Leer lassen = nur Radius entscheidet.
+  # "Nordend" ohne Zusatz wird als Nordend-West/-Ost akzeptiert.
+  erlaubt:
+    - Nordend-West
+    - Nordend-Ost
+    - Nordend
+    - Westend-Nord
+  # Greift nur, wenn das Inserat gar keinen Stadtteil nennt: dann entscheidet
+  # allein der Radius um den Referenzpunkt.
+  ohne_stadtteil_ueber_radius: true
+
+wohnung:
+  zimmer_bevorzugt: 3
+  zimmer_min: 2            # harte Untergrenze (Ausschlussregel)
+  zimmer_max: 4
+  flaeche_min: 70          # m², weich – siehe wohnung.flaeche_hart
+  flaeche_hart: 60         # darunter Ausschluss
+  wg_geeignet: true
+
+budget:
+  waehrung: EUR
+  warmmiete_min: 1300
+  warmmiete_max: 1800
+  # Ab wie viel Prozent über der Obergrenze hart aussortiert wird.
+  toleranz_prozent: 8      # 1800 € -> Ausschluss ab 1944 €
+  # Fehlt die Warmmiete, wird sie geschätzt: Kaltmiete * faktor
+  warmmiete_schaetzfaktor: 1.25
+
+einzug:
+  # ---- Wichtigstes Kriterium ----
+  fruehestens: "2027-01-01"
+  # Wie mit Inseraten umgehen, die kein Datum nennen ("nach Vereinbarung")?
+  #   ausschliessen | pruefen | ignorieren
+  # "pruefen" behält sie, markiert sie als unbestätigt und zieht Punkte ab.
+  # Empfehlung: pruefen. Siehe ANNAHMEN.md, Abschnitt 2.
+  unbekannt: pruefen
+  malus_unbekannt: 12
+  # Formulierungen, die zuverlässig auf zu frühen Einzug hindeuten
+  sofort_signale:
+    - "ab sofort"
+    - "sofort frei"
+    - "sofort beziehbar"
+    - "sofort bezugsfrei"
+    - "kurzfristig"
+    - "sofortbezug"
+
+ausstattung:
+  # gewünscht, aber nicht Pflicht – fließt nur ins Ranking ein
+  balkon: true
+  keller: true
+  einbaukueche: true
+  oepnv: true
+
+ausschluss_stichwoerter:
+  - Zwischenmiete
+  - Untermiete
+  - befristet
+  - Tauschwohnung
+  - Ringtausch
+  - möbliert
+  - Monteurzimmer
+  - Boardinghouse
+  - Serviced Apartment
+  - Wohnberechtigungsschein
+  - WBS erforderlich
+  - Studentenwohnheim
+
+# =============================================================================
+#  Ranking – Sterne aus dem Auftrag, übersetzt in Rohpunkte.
+#  5★=25  4★=18  3★=10 . Der Endscore wird auf 0–100 normiert.
+# =============================================================================
+ranking:
+  gewichte:
+    lage_bevorzugt: 25          # ★★★★★ Nordend / Westend-Nord
+    distanz_unter_bonus_km: 18  # ★★★★☆ unter 2 km
+    zimmer_ideal: 18            # ★★★★☆ 3 Zimmer
+    budget_eingehalten: 18      # ★★★★☆ Warmmiete im Korridor
+    einzug_bestaetigt: 18       # ★★★★☆ Einzug ab 01.01.2027 belegt
+    balkon: 10                  # ★★★☆☆
+    keller: 10
+    einbaukueche: 10
+    beschreibung_gut: 10
+    bilder_gut: 10
+    privatvermieter: 10
+  # Die KI-Bewertung darf den normierten Score um maximal ± diesen Wert schieben.
+  llm_einfluss_max: 10
+  # Zusätzlicher Abzug pro fehlendem Pflichtfeld (Preis, Fläche, Zimmer)
+  malus_luecke: 4
+
+# =============================================================================
+#  Quellen. robots_pflicht: true bedeutet, dass die Quelle automatisch
+#  deaktiviert wird, wenn robots.txt den Suchpfad untersagt.
+# =============================================================================
+quellen:
+  # ---- Priorität A ----
+  immobilienscout24:
+    aktiv: true
+    prioritaet: A
+    robots_pflicht: true
+    seiten: 2
+    # Wird ohne offiziellen API-Zugang mit hoher Wahrscheinlichkeit durch
+    # robots.txt bzw. Bot-Schutz gestoppt. Details in README, Abschnitt "Quellen".
+  immowelt:
+    aktiv: true
+    prioritaet: A
+    robots_pflicht: true
+    seiten: 2
+    playwright: true
+  immonet:
+    aktiv: true
+    prioritaet: A
+    robots_pflicht: true
+    seiten: 2
+    playwright: true
+  kleinanzeigen:
+    aktiv: true
+    prioritaet: A
+    robots_pflicht: true
+    seiten: 3
+    # Ortscode aus der Kleinanzeigen-URL: Frankfurt am Main = l4292.
+    # Nachschlagen: auf kleinanzeigen.de nach dem Ort suchen und die Zahl
+    # hinter dem "l" aus der Adresszeile ablesen.
+    ort_code: l4292
+    kategorie: c203
+    ort_slug: frankfurt-am-main
+    # Kleinanzeigen liefert unserer ehrlichen Kennung eine leere Seite
+    # (HTTP 200, keine Inserate), einer Browser-Kennung dieselbe Seite mit
+    # Treffern. Nachprüfbar mit:  wohnungsagent diagnose kleinanzeigen --browser-ua
+    #
+    # robots.txt erlaubt diesen Pfad ausdrücklich – der Filter ist eine
+    # separate, gröbere Sperre, die nicht zwischen einem privaten Werkzeug
+    # und einem aggressiven Crawler unterscheidet. Die AGB des Portals
+    # untersagen automatisierte Abrufe unabhängig davon.
+    #
+    # Auf false setzen, wenn du das nicht möchtest; dann liefert die Quelle
+    # nichts. Die Drosselung gilt in beiden Fällen unverändert.
+    browser_kennung: true
+
+  # ---- Priorität B ----
+  wg_gesucht:
+    aktiv: true
+    prioritaet: B
+    robots_pflicht: true
+    city_id: 41
+    typen: [2, 1]
+    seiten: 2
+  wohnungsboerse:
+    # Antwortet mit HTTP 401 – aktiver Bot-Schutz. Aus, bis geklärt.
+    aktiv: false
+    prioritaet: B
+    robots_pflicht: true
+    seiten: 2
+  wohnung_jetzt:
+    aktiv: false
+    prioritaet: B
+    robots_pflicht: true
+    seiten: 1
+
+  # ---- Priorität C: Vermieter mit eigenem Bestand ----
+  # ---- Vermieterportale: alle URLs unten sind ungeprüfte Annahmen. ----
+  # Der erste Testlauf ergab: Vonovia-API antwortet 404, naheimst.de leitet
+  # auf nhw.de um (404), GWH liefert kein JSON-LD. Deshalb aus, bis die
+  # richtigen Adressen eingetragen sind – siehe README, "Vermieter ergänzen".
+  # Eingeschaltet würden sie den Lauf nur verlangsamen, ohne etwas zu finden.
+  vonovia:
+    aktiv: false
+    prioritaet: C
+    robots_pflicht: true
+  gwh:
+    aktiv: false
+    prioritaet: C
+    robots_pflicht: true
+  nassauische_heimstaette:
+    aktiv: false
+    prioritaet: C
+    robots_pflicht: true
+  leg:
+    aktiv: false
+    prioritaet: C
+    robots_pflicht: true
+  adler:
+    aktiv: false
+    prioritaet: C
+    robots_pflicht: true
+  abg:
+    # Kein Scraper möglich: die ABG inseriert nicht, sondern vergibt über
+    # Interessentenliste + Losverfahren. Das Modul erzeugt einmalig eine
+    # Erinnerung statt Treffern.
+    aktiv: true
+    prioritaet: C
+    robots_pflicht: false
+
+# =============================================================================
+#  KI-Bewertung – der einzige Teil, der LLM-Tokens verbraucht.
+#  Standardmäßig aus. Einschalten pro Lauf über --mit-ki bzw. den Haken
+#  im Workflow-Dialog, dauerhaft über aktiv: true.
+# =============================================================================
+ki:
+  aktiv: false
+  # Höchstens so viele Inserate gehen an das Modell, immer die
+  # bestbewerteten zuerst. Grober Anhalt: rund 1.500 Tokens je Inserat.
+  max_inserate_pro_lauf: 8
+  # Bereits bewertete Inserate werden nicht erneut ans Modell geschickt,
+  # solange sich Preis und Beschreibung nicht geändert haben.
+  erneut_bewerten: false
+
+betrieb:
+  # Nur relevant für den optionalen Dauerbetrieb (cli dienst).
+  # Der Normalbetrieb läuft auf Knopfdruck, siehe README.
+  intervall_minuten: 360
+  request_pause_sekunden: [2.0, 5.0]
+  timeout_sekunden: 30
+  max_retries: 3
+  historie_tage: 90
+  user_agent_kontakt: "wohnungsagent (privater Eigenbedarf)"

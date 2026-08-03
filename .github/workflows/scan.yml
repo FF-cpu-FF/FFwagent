@@ -1,0 +1,135 @@
+name: Wohnungen suchen
+
+# --------------------------------------------------------------------------
+#  Manuell gesteuert – kein Zeitplan.
+#
+#  Auslösen: Reiter "Actions" > "Wohnungen suchen" > "Run workflow".
+#  Der Knopf steht auch direkt im Dashboard verlinkt.
+#
+#  Falls du später doch automatisch suchen willst: die vier Zeilen unter
+#  "schedule" einkommentieren. Das Scrapen allein kostet keine LLM-Tokens –
+#  die verbraucht ausschließlich die KI-Bewertung, und die ist unten ein
+#  eigener Schalter, der standardmäßig aus ist.
+# --------------------------------------------------------------------------
+
+on:
+  # schedule:
+  #   - cron: "0 6,12,18 * * *"     # 08, 14, 20 Uhr deutscher Zeit
+  workflow_dispatch:
+    inputs:
+      mit_ki:
+        description: "KI-Zusammenfassungen erzeugen (verbraucht LLM-Tokens)"
+        type: boolean
+        default: false
+      ki_limit:
+        description: "Höchstens so viele Inserate an die KI geben"
+        type: string
+        default: "8"
+      quelle:
+        description: "Nur eine Quelle (leer = alle)"
+        required: false
+        default: ""
+      dry_run:
+        description: "Probelauf: nichts speichern, nichts melden"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wohnungssuche
+  cancel-in-progress: false
+
+jobs:
+  suchen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Abhängigkeiten
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+
+      # Der Datenbestand muss zwischen den Läufen erhalten bleiben, sonst
+      # gilt bei jedem Durchlauf alles wieder als neu und du bekommst
+      # dieselben Wohnungen erneut gemeldet.
+      - name: Datenbank aus Cache holen
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: wohnungen-db-${{ github.run_id }}
+          restore-keys: wohnungen-db-
+
+      - name: Suchen
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          IS24_API_KEY: ${{ secrets.IS24_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_TO: ${{ secrets.SMTP_TO }}
+        run: |
+          python -m wohnungsagent.cli scan -v \
+            ${{ inputs.mit_ki && format('--mit-ki --ki-limit {0}', inputs.ki_limit) || '' }} \
+            ${{ inputs.quelle && format('--quelle {0}', inputs.quelle) || '' }} \
+            ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Zusammenfassung
+        if: always()
+        run: |
+          {
+            echo "## Wohnungsagent"
+            echo
+            python - <<'PY'
+          import json, pathlib
+          pfad = pathlib.Path("docs/data/listings.json")
+          if not pfad.exists():
+              print("_Kein Export vorhanden._"); raise SystemExit
+          daten = json.loads(pfad.read_text(encoding="utf-8"))
+          lauf = daten.get("letzter_lauf", {})
+          print(f"**{daten['anzahl']} Treffer im Bestand** · {lauf.get('roh_gefunden', 0)} Inserate gescannt")
+          if lauf.get("ki_aufrufe"):
+              print(f"\nKI: {lauf['ki_aufrufe']} Aufrufe, rund {lauf.get('ki_tokens', 0):,} Tokens.".replace(",", "."))
+          else:
+              print("\nKI: nicht verwendet – keine Tokens verbraucht.")
+          if lauf.get("quellen_robots_blockiert"):
+              print(f"\nDurch robots.txt gesperrt: `{'`, `'.join(lauf['quellen_robots_blockiert'])}`")
+          if lauf.get("quellen_fehler"):
+              print("\n### Quellen mit Fehlern\n")
+              for name, meldung in lauf["quellen_fehler"].items():
+                  print(f"- `{name}`: {meldung}")
+          print("\n| Score | Titel | Warm | Zi. | m² | km | Einzug |")
+          print("|---:|---|---:|---:|---:|---:|---|")
+          for i in daten["listings"][:15]:
+              print(f"| **{i['score']}** | [{i['titel'][:50]}]({i['url']}) "
+                    f"| {i['warmmiete'] or '–'} | {i['zimmer'] or '–'} | {i['flaeche'] or '–'} "
+                    f"| {i['distanz_km'] or '–'} | {i['einzug_ab'] or i['einzug_status']} |")
+          PY
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Export committen
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git config user.name  "wohnungsagent"
+          git config user.email "actions@github.com"
+          git add docs/data
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen."
+          else
+            git commit -m "Suche $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

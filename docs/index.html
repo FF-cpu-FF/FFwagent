@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wohnungsagent Frankfurt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ton:#E9E7E0; --flaeche:#F8F7F3; --stein:#C6C2B8; --stein-tief:#A9A499;
+  --tinte:#17191D; --weich:#62656C;
+  --kobalt:#1E3E8C; --apfel:#6F6B18; --rost:#9C3A2B; --raute:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ton);color:var(--tinte);font-family:"Instrument Sans",system-ui,sans-serif;
+  font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:var(--kobalt);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--kobalt);outline-offset:2px}
+
+header{padding:34px 24px 0;max-width:1340px;margin:0 auto}
+.wortmarke{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+  font-size:clamp(30px,5.5vw,52px);letter-spacing:-.035em;line-height:1}
+.wortmarke em{font-style:normal;color:var(--kobalt)}
+.unterzeile{color:var(--weich);font-size:14px;margin-top:6px;max-width:60ch}
+.band{height:var(--raute);margin-top:20px;
+  background-image:
+    linear-gradient(45deg,var(--kobalt) 25%,transparent 25.5%),
+    linear-gradient(-45deg,var(--kobalt) 25%,transparent 25.5%),
+    linear-gradient(45deg,transparent 74.5%,var(--kobalt) 75%),
+    linear-gradient(-45deg,transparent 74.5%,var(--kobalt) 75%);
+  background-size:var(--raute) var(--raute)}
+
+.aktion{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  background:var(--flaeche);border:1px solid var(--stein);border-top:none;padding:14px 18px}
+.knopf{display:inline-block;background:var(--kobalt);color:#fff;border:none;
+  padding:10px 20px;font-family:"Instrument Sans",sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;border-radius:2px;text-decoration:none}
+.knopf:hover{background:#16306e;text-decoration:none;color:#fff}
+.aktion p{font-size:12.5px;color:var(--weich);margin:0;max-width:64ch}
+.aktion code{font-family:"JetBrains Mono",monospace;font-size:11.5px;
+  background:var(--ton);padding:1px 5px;border:1px solid var(--stein)}
+
+.kennzahlen{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px}
+.kennzahl{background:var(--flaeche);border:1px solid var(--stein);border-top:none;
+  padding:12px 18px;flex:1 1 140px}
+.kennzahl b{display:block;font-family:"JetBrains Mono",monospace;font-size:22px;font-weight:600;letter-spacing:-.02em}
+.kennzahl span{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--weich)}
+
+main{max-width:1340px;margin:0 auto;padding:24px;display:grid;grid-template-columns:250px 1fr;gap:24px;align-items:start}
+@media (max-width:920px){main{grid-template-columns:1fr;padding:16px}}
+
+.leiste{background:var(--flaeche);border:1px solid var(--stein);padding:18px;
+  position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto}
+@media (max-width:920px){.leiste{position:static;max-height:none}}
+.leiste h2{font-family:"Bricolage Grotesque",sans-serif;font-size:12px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.12em;color:var(--weich);
+  margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--stein)}
+.gruppe{margin-bottom:18px}
+.gruppe>label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--weich);margin-bottom:6px}
+.paar{display:flex;gap:6px}
+input,select{width:100%;background:#fff;border:1px solid var(--stein);padding:7px 9px;
+  font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--tinte);border-radius:2px}
+input[type=search]{font-family:"Instrument Sans",sans-serif}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:12px;padding:4px 9px;border:1px solid var(--stein);background:#fff;
+  cursor:pointer;border-radius:2px;user-select:none;color:var(--weich)}
+.chip[aria-pressed=true]{background:var(--kobalt);border-color:var(--kobalt);color:#fff;font-weight:500}
+.reset{width:100%;margin-top:4px;padding:8px;background:transparent;border:1px solid var(--stein-tief);
+  font-family:inherit;font-size:12px;cursor:pointer;color:var(--weich);border-radius:2px}
+.reset:hover{border-color:var(--kobalt);color:var(--kobalt)}
+
+.kopfzeile{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;gap:12px;flex-wrap:wrap}
+.anzahl{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--weich)}
+#sort{width:auto;padding:5px 8px;font-size:12px}
+
+.zeile{display:grid;grid-template-columns:104px 1fr 92px 60px 66px 74px 96px;
+  gap:14px;align-items:center;background:var(--flaeche);border:1px solid var(--stein);
+  padding:12px;margin-bottom:-1px;position:relative}
+.zeile:hover{border-color:var(--kobalt);z-index:2}
+.zeile.neu{border-left:3px solid var(--kobalt);padding-left:10px}
+.bild,.kein-bild{width:104px;height:74px;object-fit:cover;border:1px solid var(--stein);display:block;background:var(--ton)}
+.kein-bild{border-style:dashed;display:grid;place-items:center;color:var(--stein-tief);font-size:10px;letter-spacing:.08em}
+.titel{font-weight:600;font-size:15px;line-height:1.3;display:block;color:var(--tinte)}
+.titel:hover{color:var(--kobalt);text-decoration:none}
+.meta{font-size:12px;color:var(--weich);margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.quelle{font-size:10px;text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--stein-tief);padding:1px 5px}
+.neu-marke{color:var(--kobalt);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.einzug-ok{color:var(--apfel);font-weight:600}
+.einzug-offen{color:var(--rost)}
+.ki{font-size:12px;color:var(--weich);margin-top:5px;padding-left:9px;border-left:2px solid var(--stein)}
+.warnung{color:var(--rost)}
+.zahlen{display:contents}
+.zahl{font-family:"JetBrains Mono",monospace;text-align:right}
+.zahl b{display:block;font-size:15px;font-weight:600;letter-spacing:-.02em}
+.zahl span{font-size:11px;color:var(--weich)}
+.rauten{display:flex;gap:3px;justify-content:flex-end;margin-bottom:3px}
+.rauten i{width:7px;height:7px;transform:rotate(45deg);background:var(--stein);display:block}
+.rauten i.voll{background:var(--kobalt)}
+.score-zahl{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--weich);text-align:right;display:block}
+
+@media (max-width:920px){
+  .zeile{grid-template-columns:88px 1fr;grid-template-areas:"bild info" "zahlen zahlen"}
+  .bild,.kein-bild{grid-area:bild;width:88px;height:66px}
+  .info{grid-area:info}
+  .zahlen{grid-area:zahlen;display:flex;justify-content:space-between;gap:8px;
+    border-top:1px solid var(--stein);padding-top:8px;flex-wrap:wrap}
+  .zahl,.score-zahl,.rauten{text-align:left;justify-content:flex-start}
+}
+
+.leer{background:var(--flaeche);border:1px dashed var(--stein-tief);padding:56px 28px;text-align:center}
+.leer h3{font-family:"Bricolage Grotesque",sans-serif;font-size:20px;margin-bottom:8px}
+.leer p{color:var(--weich);font-size:14px;max-width:52ch;margin:0 auto}
+.hinweis{background:#fdf3e8;border:1px solid #e0b984;padding:10px 14px;font-size:13px;margin-bottom:14px}
+footer{max-width:1340px;margin:0 auto;padding:8px 24px 48px;color:var(--weich);font-size:12px;max-width:80ch}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="wortmarke">Wohnungs<em>agent</em></h1>
+  <p class="unterzeile">Frankfurt Nordend und Westend-Nord, höchstens 3 km zur Frankfurt School,
+    Einzug frühestens Januar 2027. Sortiert nach Eignung, nicht nach Anzeigendatum. Gesucht wird auf Knopfdruck, nicht nach Zeitplan.</p>
+  <div class="band" aria-hidden="true"></div>
+
+  <div class="aktion">
+    <a class="knopf" id="suchknopf" href="#" target="_blank" rel="noopener">Suche starten</a>
+    <p id="aktion-text">Der Agent sucht nicht von selbst. Der Knopf öffnet den Workflow
+      „Wohnungen suchen“ auf GitHub – dort auf <em>Run workflow</em> drücken. Die KI-Bewertung
+      ist ein eigener Haken im Dialog und standardmäßig aus; ohne sie verbraucht ein Lauf
+      keine Tokens. Lokal geht dasselbe mit <code>make scan</code>.</p>
+  </div>
+
+  <div class="kennzahlen">
+    <div class="kennzahl"><b id="k-treffer">–</b><span>Treffer</span></div>
+    <div class="kennzahl"><b id="k-neu">–</b><span>neu, 24 h</span></div>
+    <div class="kennzahl"><b id="k-termin">–</b><span>Einzug belegt</span></div>
+    <div class="kennzahl"><b id="k-miete">–</b><span>Median warm</span></div>
+    <div class="kennzahl"><b id="k-distanz">–</b><span>Median km zur FS</span></div>
+    <div class="kennzahl"><b id="k-scan">–</b><span>letzter Lauf</span></div>
+    <div class="kennzahl"><b id="k-tokens">–</b><span>Tokens letzter Lauf</span></div>
+  </div>
+</header>
+
+<main>
+  <aside class="leiste">
+    <h2>Filter</h2>
+    <div class="gruppe">
+      <label for="f-suche">Volltext</label>
+      <input type="search" id="f-suche" placeholder="Balkon, Altbau, …">
+    </div>
+    <div class="gruppe">
+      <label>Warmmiete €</label>
+      <div class="paar">
+        <input type="number" id="f-miete-min" placeholder="von" step="50">
+        <input type="number" id="f-miete-max" placeholder="bis" step="50">
+      </div>
+    </div>
+    <div class="gruppe">
+      <label>Zimmer</label>
+      <div class="paar">
+        <input type="number" id="f-zi-min" placeholder="von" step="0.5">
+        <input type="number" id="f-zi-max" placeholder="bis" step="0.5">
+      </div>
+    </div>
+    <div class="gruppe">
+      <label>Fläche m²</label>
+      <div class="paar">
+        <input type="number" id="f-qm-min" placeholder="von" step="5">
+        <input type="number" id="f-qm-max" placeholder="bis" step="5">
+      </div>
+    </div>
+    <div class="gruppe">
+      <label for="f-distanz">Höchstens km zur FS</label>
+      <input type="number" id="f-distanz" placeholder="z. B. 2" step="0.5">
+    </div>
+    <div class="gruppe">
+      <label for="f-score">Score ab</label>
+      <input type="number" id="f-score" placeholder="0" step="5">
+    </div>
+    <div class="gruppe">
+      <label>Einzugstermin</label>
+      <div class="chips" id="f-einzug">
+        <span class="chip" role="button" tabindex="0" aria-pressed="true" data-wert="passt">belegt</span>
+        <span class="chip" role="button" tabindex="0" aria-pressed="true" data-wert="unbekannt">unbekannt</span>
+      </div>
+    </div>
+    <div class="gruppe">
+      <label>Stadtteil</label>
+      <div class="chips" id="f-stadtteile"></div>
+    </div>
+    <div class="gruppe">
+      <label>Quelle</label>
+      <div class="chips" id="f-quellen"></div>
+    </div>
+    <div class="gruppe">
+      <div class="chips">
+        <span class="chip" id="f-nurneu" role="button" tabindex="0" aria-pressed="false">nur neu, 24 h</span>
+        <span class="chip" id="f-mitbild" role="button" tabindex="0" aria-pressed="false">nur mit Bild</span>
+      </div>
+    </div>
+    <button class="reset" id="f-reset">Alle Filter zurücksetzen</button>
+  </aside>
+
+  <section>
+    <div id="hinweis"></div>
+    <div class="kopfzeile">
+      <span class="anzahl" id="anzahl">lade …</span>
+      <select id="sort">
+        <option value="score">Sortierung: Score</option>
+        <option value="neu">Sortierung: zuletzt gefunden</option>
+        <option value="distanz">Sortierung: Entfernung</option>
+        <option value="miete">Sortierung: Warmmiete</option>
+        <option value="einzug">Sortierung: Einzugstermin</option>
+        <option value="flaeche">Sortierung: Fläche</option>
+      </select>
+    </div>
+    <div id="liste"></div>
+  </section>
+</main>
+
+<footer>
+  Wohnungen ohne Straßenangabe sitzen auf dem Stadtteilschwerpunkt, die Entfernung ist dann
+  auf etwa ±700 m genau. Bei der ABG Frankfurt Holding läuft die Vergabe über die
+  Interessentenliste und ein Losverfahren – dort separat eintragen, kein Agent kann das ersetzen.
+</footer>
+
+<script>
+const NEU_FENSTER = 24*3600*1000;
+let ALLE = [];
+const z = {
+  suche:"", mieteMin:null, mieteMax:null, ziMin:null, ziMax:null, qmMin:null, qmMax:null,
+  distanz:null, score:null, einzug:new Set(["passt","unbekannt"]),
+  stadtteile:new Set(), quellen:new Set(), nurNeu:false, mitBild:false, sort:"score"
+};
+const $ = id => document.getElementById(id);
+const num = v => (v===null||v===undefined||v==="") ? null : Number(v);
+const f = (v,n=0) => (v===null||v===undefined) ? "–" : v.toLocaleString("de-DE",{minimumFractionDigits:n,maximumFractionDigits:n});
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const istNeu = l => { const t = Date.parse(l.erstmals_gesehen); return Number.isFinite(t) && (Date.now()-t) < NEU_FENSTER; };
+const median = a => a.length ? a.slice().sort((x,y)=>x-y)[Math.floor(a.length/2)] : null;
+
+// Die Pages-Adresse verrät das Repository: nutzer.github.io/repo -> github.com/nutzer/repo.
+// Falls du eine eigene Domain nutzt, hier fest eintragen.
+const REPO = (() => {
+  const treffer = location.hostname.match(/^([^.]+)\.github\.io$/);
+  const pfad = location.pathname.split("/").filter(Boolean)[0];
+  return treffer && pfad ? `${treffer[1]}/${pfad}` : null;
+})();
+
+function knopfZiel(){
+  const knopf = $("suchknopf");
+  if(REPO){
+    knopf.href = `https://github.com/${REPO}/actions/workflows/scan.yml`;
+  }else{
+    knopf.removeAttribute("target");
+    knopf.href = "#";
+    knopf.textContent = "Suche lokal starten";
+    knopf.title = "Repository nicht automatisch erkannt";
+    $("aktion-text").innerHTML =
+      'Der Agent sucht nicht von selbst. Starte einen Lauf mit <code>make scan</code>, ' +
+      'oder über den Reiter Actions deines Repositories. Die KI-Bewertung ist dabei ' +
+      'ein eigener Schalter und standardmäßig aus – ohne sie verbraucht ein Lauf keine Tokens.';
+  }
+}
+
+async function laden(){
+  try{
+    const r = await fetch("data/listings.json?v="+Date.now());
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const d = await r.json();
+    ALLE = d.listings || [];
+    $("k-scan").textContent = d.aktualisiert
+      ? new Date(d.aktualisiert).toLocaleString("de-DE",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : "–";
+    const lauf = d.letzter_lauf || {};
+    $("k-tokens").textContent = lauf.ki_tokens
+      ? lauf.ki_tokens.toLocaleString("de-DE") : "0";
+    zeigeLaufhinweis(lauf);
+    if(!ALLE.length){ leer("Noch keine Treffer",
+      "Entweder lief der Agent noch nicht, oder aktuell passt kein Inserat auf das Profil. Bei einem Einzugstermin im Januar 2027 ist das bis in den Herbst 2026 hinein normal – die meisten Wohnungen werden erst vier bis acht Wochen vor Bezug inseriert."); return; }
+    chipsBauen(); ausHash(); zeichnen();
+  }catch(e){
+    leer("Keine Daten gefunden",
+      "Die Datei data/listings.json fehlt. Einmal den Workflow „Wohnungen scannen“ unter Actions starten.");
+  }
+}
+
+function zeigeLaufhinweis(lauf){
+  const teile = [];
+  if((lauf.quellen_robots_blockiert||[]).length)
+    teile.push("Durch robots.txt gesperrt: " + lauf.quellen_robots_blockiert.join(", ") + ". Das ist erwartetes Verhalten.");
+  const fehler = Object.keys(lauf.quellen_fehler||{});
+  if(fehler.length) teile.push("Quellen mit Fehlern: " + fehler.join(", ") + ".");
+  $("hinweis").innerHTML = teile.length ? `<div class="hinweis">${esc(teile.join(" "))}</div>` : "";
+}
+
+function leer(titel, text){
+  $("liste").innerHTML = `<div class="leer"><h3>${esc(titel)}</h3><p>${esc(text)}</p></div>`;
+  $("anzahl").textContent = "";
+}
+
+function chipsBauen(){
+  const st = [...new Set(ALLE.map(l=>l.stadtteil).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"de"));
+  const qu = [...new Set(ALLE.map(l=>l.quelle))].sort();
+  $("f-stadtteile").innerHTML = st.map(s=>`<span class="chip" role="button" tabindex="0" aria-pressed="false" data-wert="${esc(s)}">${esc(s)}</span>`).join("");
+  $("f-quellen").innerHTML = qu.map(q=>`<span class="chip" role="button" tabindex="0" aria-pressed="false" data-wert="${esc(q)}">${esc(q.replace(/_/g,"-"))}</span>`).join("");
+  binde("f-stadtteile", z.stadtteile); binde("f-quellen", z.quellen); binde("f-einzug", z.einzug);
+}
+
+function binde(id, menge){
+  $(id).querySelectorAll(".chip").forEach(chip=>{
+    const um = ()=>{ const w = chip.dataset.wert;
+      menge.has(w) ? menge.delete(w) : menge.add(w);
+      chip.setAttribute("aria-pressed", menge.has(w)); zeichnen(); inHash(); };
+    chip.addEventListener("click", um);
+    chip.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();um();} });
+  });
+}
+
+function gefiltert(){
+  const s = z.suche.toLowerCase().trim();
+  return ALLE.filter(l=>{
+    if(z.mieteMin!==null && (l.warmmiete??0) < z.mieteMin) return false;
+    if(z.mieteMax!==null && l.warmmiete!==null && l.warmmiete > z.mieteMax) return false;
+    if(z.ziMin!==null && l.zimmer!==null && l.zimmer < z.ziMin) return false;
+    if(z.ziMax!==null && l.zimmer!==null && l.zimmer > z.ziMax) return false;
+    if(z.qmMin!==null && l.flaeche!==null && l.flaeche < z.qmMin) return false;
+    if(z.qmMax!==null && l.flaeche!==null && l.flaeche > z.qmMax) return false;
+    if(z.distanz!==null && l.distanz_km!==null && l.distanz_km > z.distanz) return false;
+    if(z.score!==null && l.score < z.score) return false;
+    if(z.einzug.size && !z.einzug.has(l.einzug_status)) return false;
+    if(z.stadtteile.size && !z.stadtteile.has(l.stadtteil)) return false;
+    if(z.quellen.size && !z.quellen.has(l.quelle)) return false;
+    if(z.nurNeu && !istNeu(l)) return false;
+    if(z.mitBild && !(l.bilder||[]).length) return false;
+    if(s){
+      const heu = `${l.titel} ${l.beschreibung||""} ${l.stadtteil||""} ${l.ki_zusammenfassung||""}`.toLowerCase();
+      if(!heu.includes(s)) return false;
+    }
+    return true;
+  });
+}
+
+const sortierer = {
+  score:  (a,b)=>b.score-a.score || (b.erstmals_gesehen||"").localeCompare(a.erstmals_gesehen||""),
+  neu:    (a,b)=>(b.erstmals_gesehen||"").localeCompare(a.erstmals_gesehen||""),
+  distanz:(a,b)=>(a.distanz_km??1e9)-(b.distanz_km??1e9),
+  miete:  (a,b)=>(a.warmmiete??1e9)-(b.warmmiete??1e9),
+  flaeche:(a,b)=>(b.flaeche??0)-(a.flaeche??0),
+  einzug: (a,b)=>(a.einzug_ab||"9999").localeCompare(b.einzug_ab||"9999")
+};
+
+function zeichnen(){
+  const t = gefiltert().sort(sortierer[z.sort]);
+  $("k-treffer").textContent = t.length;
+  $("k-neu").textContent = t.filter(istNeu).length;
+  $("k-termin").textContent = t.filter(l=>l.einzug_status==="passt").length;
+  $("k-miete").textContent = (m=>m?f(m)+" €":"–")(median(t.map(l=>l.warmmiete).filter(Boolean)));
+  $("k-distanz").textContent = (m=>m!==null?f(m,1):"–")(median(t.map(l=>l.distanz_km).filter(v=>v!==null&&v!==undefined)));
+  $("anzahl").textContent = `${t.length} von ${ALLE.length} Inseraten`;
+  if(!t.length){ leer("Kein Inserat passt","Lockere einen Filter – meist ist es die Obergrenze bei der Entfernung oder die Stadtteilauswahl."); return; }
+  $("liste").innerHTML = t.map(karte).join("");
+}
+
+const rauten = s => `<div class="rauten">${[0,1,2,3,4].map(i=>`<i class="${i<Math.round(s/20)?'voll':''}"></i>`).join("")}</div>`;
+
+function einzugText(l){
+  if(l.einzug_ab) return `<span class="einzug-ok">ab ${new Date(l.einzug_ab).toLocaleDateString("de-DE")}</span>`;
+  if(l.einzug_status==="unbekannt") return `<span class="einzug-offen">Termin offen</span>`;
+  return "";
+}
+
+function karte(l){
+  const neu = istNeu(l);
+  const bild = (l.bilder||[]).length
+    ? `<img class="bild" src="${esc(l.bilder[0])}" alt="" loading="lazy" onerror="this.outerHTML='<div class=&quot;kein-bild&quot;>KEIN BILD</div>'">`
+    : `<div class="kein-bild">KEIN BILD</div>`;
+  const warnung = (l.ki_warnsignale||[]).length
+    ? `<div class="ki warnung">${esc(l.ki_warnsignale.slice(0,2).join("; "))}</div>` : "";
+  const ki = l.ki_zusammenfassung ? `<div class="ki">${esc(l.ki_zusammenfassung)}</div>` : "";
+
+  return `<article class="zeile ${neu?'neu':''}">
+    ${bild}
+    <div class="info">
+      <a class="titel" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.titel)}</a>
+      <div class="meta">
+        ${neu?'<span class="neu-marke">neu</span>':''}
+        <span class="quelle">${esc(l.quelle.replace(/_/g,"-"))}</span>
+        ${l.stadtteil?`<span>${esc(l.stadtteil)}</span>`:''}
+        ${einzugText(l)}
+        ${l.qm_preis?`<span>${f(l.qm_preis,1)} €/m²</span>`:''}
+        ${l.ki_wg_geeignet===true?'<span>WG-tauglich</span>':''}
+      </div>
+      ${ki}${warnung}
+    </div>
+    <div class="zahlen">
+      <div class="zahl"><b>${f(l.warmmiete)} €</b><span>warm</span></div>
+      <div class="zahl"><b>${l.zimmer?f(l.zimmer,l.zimmer%1?1:0):'–'}</b><span>Zi.</span></div>
+      <div class="zahl"><b>${f(l.flaeche)}</b><span>m²</span></div>
+      <div class="zahl"><b>${f(l.distanz_km,1)}</b><span>km zur FS</span></div>
+      <div class="zahl">${rauten(l.score)}<b style="font-size:13px">&nbsp;</b><span class="score-zahl">Score ${l.score}</span></div>
+    </div>
+  </article>`;
+}
+
+const felder = {"f-suche":"suche","f-miete-min":"mieteMin","f-miete-max":"mieteMax","f-zi-min":"ziMin",
+  "f-zi-max":"ziMax","f-qm-min":"qmMin","f-qm-max":"qmMax","f-distanz":"distanz","f-score":"score"};
+Object.entries(felder).forEach(([id,k])=>{
+  $(id).addEventListener("input", e=>{ z[k] = k==="suche" ? e.target.value : num(e.target.value); zeichnen(); inHash(); });
+});
+$("sort").addEventListener("change", e=>{ z.sort = e.target.value; zeichnen(); inHash(); });
+[["f-nurneu","nurNeu"],["f-mitbild","mitBild"]].forEach(([id,k])=>{
+  const chip = $(id);
+  const um = ()=>{ z[k] = !z[k]; chip.setAttribute("aria-pressed", z[k]); zeichnen(); inHash(); };
+  chip.addEventListener("click", um);
+  chip.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();um();} });
+});
+$("f-reset").addEventListener("click", ()=>{ location.hash=""; location.reload(); });
+
+function inHash(){
+  const k = {};
+  Object.entries(z).forEach(([n,v])=>{
+    if(v instanceof Set){ if(v.size) k[n]=[...v]; }
+    else if(v!==null && v!=="" && v!==false && !(n==="sort"&&v==="score")) k[n]=v;
+  });
+  const s = JSON.stringify(k);
+  history.replaceState(null,"", s==="{}" ? location.pathname : "#"+encodeURIComponent(s));
+}
+
+function ausHash(){
+  if(!location.hash) return;
+  try{
+    const d = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+    Object.entries(d).forEach(([k,v])=>{
+      if(z[k] instanceof Set){ z[k].clear(); v.forEach(x=>z[k].add(x)); } else z[k]=v;
+    });
+    Object.entries(felder).forEach(([id,k])=>{ if(z[k]!==null&&z[k]!=="") $(id).value = z[k]; });
+    $("sort").value = z.sort;
+    $("f-nurneu").setAttribute("aria-pressed", z.nurNeu);
+    $("f-mitbild").setAttribute("aria-pressed", z.mitBild);
+    [["f-stadtteile",z.stadtteile],["f-quellen",z.quellen],["f-einzug",z.einzug]].forEach(([id,menge])=>{
+      $(id).querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed", menge.has(c.dataset.wert)));
+    });
+  }catch(e){ /* kaputter Hash wird ignoriert */ }
+}
+
+knopfZiel();
+laden();
+// Nur die Anzeige wird aufgefrischt – es wird dabei nichts gesucht.
+setInterval(laden, 5*60*1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# --- Kern ---
+requests>=2.32
+beautifulsoup4>=4.12
+lxml>=5.2
+PyYAML>=6.0
+python-dateutil>=2.9
+loguru>=0.7
+tenacity>=9.0
+
+# --- Daten ---
+SQLAlchemy>=2.0
+pandas>=2.2
+pydantic>=2.9
+pydantic-settings>=2.6
+
+# --- Abgleich & Geo ---
+rapidfuzz>=3.10
+geopy>=2.4
+
+# --- Betrieb ---
+APScheduler>=3.10
+fastapi>=0.115
+uvicorn[standard]>=0.32
+
+# --- Dashboard ---
+streamlit>=1.40
+
+# --- Optional: Portale mit Javascript ---
+playwright>=1.48
+
+# --- Optional: KI-Bewertung (eines von beiden genügt) ---
+anthropic>=0.40
+openai>=1.55

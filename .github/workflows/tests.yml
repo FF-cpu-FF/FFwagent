@@ -1,0 +1,35 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - run: pip install -r requirements-dev.txt && pip install -e .
+
+      - name: Linting
+        run: ruff check src tests dashboard
+
+      - name: Typen
+        run: mypy src
+        continue-on-error: true
+
+      - name: Tests
+        run: pytest -v --cov=wohnungsagent --cov-report=term-missing
+
+      - name: Suchprofil validieren
+        run: python -m wohnungsagent.cli pruefe

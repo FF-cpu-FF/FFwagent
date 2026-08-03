@@ -1,0 +1,20 @@
+# Führender Slash ist wichtig: "data/" ohne ihn würde auch docs/data/
+# ignorieren – und damit genau den Export, den GitHub Pages ausliefert.
+/data/
+/logs/
+*.db
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.DS_Store
+
+# Von "pip install -e ." erzeugt
+*.egg-info/
+build/
+dist/

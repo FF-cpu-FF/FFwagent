@@ -1,0 +1,61 @@
+# Der Normalbetrieb ist das Dashboard: dort sitzt der Suchknopf.
+# Es läuft nichts von allein und es werden keine Tokens verbraucht,
+# solange du nicht "mit KI" ankreuzt.
+#
+#   docker compose up -d                        Dashboard auf :8501
+#   docker compose run --rm agent scan          einmalig suchen (ohne KI)
+#   docker compose run --rm agent scan --mit-ki einmalig suchen (mit KI)
+#   docker compose --profile api up -d          REST-Schnittstelle auf :8000
+#   docker compose --profile dauerbetrieb up -d Scheduler, falls doch gewünscht
+
+services:
+  dashboard:
+    build:
+      context: .
+      args:
+        MIT_PLAYWRIGHT: "false"   # auf "true" setzen, wenn Immowelt/Immonet gebraucht werden
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config:ro
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+    command: ["streamlit", "run", "dashboard/app.py",
+              "--server.address=0.0.0.0", "--server.port=8501"]
+
+  # Kein restart, kein Zeitplan: läuft genau einmal, wenn du ihn aufrufst.
+  agent:
+    build: .
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config:ro
+    profiles: ["manuell"]
+    entrypoint: ["python", "-m", "wohnungsagent.cli"]
+    command: ["scan", "-v"]
+
+  api:
+    build: .
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+    ports:
+      - "8000:8000"
+    profiles: ["api"]
+    restart: unless-stopped
+    command: ["uvicorn", "wohnungsagent.api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  dauerbetrieb:
+    build: .
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config:ro
+    profiles: ["dauerbetrieb"]
+    restart: unless-stopped
+    command: ["python", "-m", "wohnungsagent.cli", "dienst"]
