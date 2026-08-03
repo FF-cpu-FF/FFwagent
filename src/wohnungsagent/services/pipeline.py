@@ -12,11 +12,12 @@ das spart den Großteil der Kosten.
 from __future__ import annotations
 
 from collections import Counter
-from datetime import UTC, datetime
-from typing import TYPE_CHECKING
+from datetime import datetime, timezone
 
 import requests
 from loguru import logger
+
+from typing import TYPE_CHECKING
 
 from ..config.profil import Suchprofil
 from ..llm.client import LlmClient
@@ -25,7 +26,7 @@ from ..notifier.kanaele import benachrichtige
 from ..ranking import regeln, scoring
 from ..scrapers.base import QuelleBlockiert, QuelleKaputt
 from ..scrapers.registry import baue_alle
-from . import dedupe, parsing
+from . import dedupe, detailseiten, parsing
 from . import geo as geodienst
 
 if TYPE_CHECKING:  # Repository nur als Typ – hält SQLAlchemy aus dieser Schicht heraus
@@ -36,7 +37,7 @@ class Pipeline:
     def __init__(
         self,
         profil: Suchprofil,
-        repository: Repository,
+        repository: "Repository",
         llm: LlmClient | None = None,
         geocoding: bool = False,
     ) -> None:
@@ -78,7 +79,7 @@ class Pipeline:
                     scraper.label, code,
                 )
                 ergebnis.quellen_fehler[scraper.name] = f"HTTP {code}"
-            except Exception as fehler:
+            except Exception as fehler:  # noqa: BLE001 – eine Quelle kippt nie den Lauf
                 logger.exception("{} unerwartet fehlgeschlagen", scraper.label)
                 ergebnis.quellen_fehler[scraper.name] = f"{type(fehler).__name__}: {fehler}"
 
@@ -126,7 +127,7 @@ class Pipeline:
         if (schluessel := geodienst.normalisiere_stadtteil(inserat.stadtteil or inserat.adresse)):
             inserat.stadtteil = geodienst.anzeigename(schluessel)
 
-        inserat.zuletzt_gesehen = datetime.now(UTC)
+        inserat.zuletzt_gesehen = datetime.now(timezone.utc)
         return inserat
 
     def aufbereiten(self, roh: list[Inserat], ergebnis: Laufergebnis) -> list[Inserat]:
@@ -154,6 +155,41 @@ class Pipeline:
         ergebnis.nach_dedupe = len(eindeutig)
         logger.info("{} nach Duplikatabgleich", len(eindeutig))
         return eindeutig
+
+    def vertiefe(self, kandidaten: list[Inserat], hoechstens: int) -> int:
+        """Holt die Detailseiten der Kandidaten und wertet sie aus.
+
+        Läuft erst **nach** der ersten Bewertung: Nur was die harten Regeln
+        überstanden hat, ist einen zusätzlichen Abruf wert. Aus zweihundert
+        Rohinseraten werden so eine Handvoll Aufrufe.
+
+        Fehlschläge sind unkritisch – das Inserat behält dann die Angaben aus
+        der Trefferliste und bleibt sichtbar.
+        """
+        from ..scrapers.registry import baue
+
+        offen = [i for i in kandidaten if not i.detail_gelesen][:hoechstens]
+        if not offen:
+            return 0
+
+        scraper_je_quelle: dict[str, object] = {}
+        gelesen = 0
+        for inserat in offen:
+            try:
+                scraper = scraper_je_quelle.get(inserat.quelle)
+                if scraper is None:
+                    cfg = dict(self.profil.quellen.get(inserat.quelle) or {})
+                    cfg["aktiv"] = True
+                    scraper = baue(inserat.quelle, cfg, self.profil)
+                    scraper_je_quelle[inserat.quelle] = scraper
+                html = scraper.hole(inserat.url)
+                detailseiten.lies_detail(html, inserat)
+                gelesen += 1
+            except Exception as fehler:  # noqa: BLE001 – ein Ausfall kippt nichts
+                logger.debug("Detailseite {} nicht lesbar: {}", inserat.url, fehler)
+
+        logger.info("{} Detailseiten gelesen", gelesen)
+        return gelesen
 
     # ----------------------------------------------------------- Bewerten
     def bewerte(self, inserate: list[Inserat]) -> tuple[list[Inserat], list[Inserat]]:
@@ -214,7 +250,7 @@ class Pipeline:
                 i.uid for i in self.repo.alle(limit=2000)
                 if i.uid in uids and i.ki and i.ki.zusammenfassung
             }
-        except Exception:
+        except Exception:  # noqa: BLE001 – im Zweifel lieber neu bewerten
             return set()
 
     # ---------------------------------------------------------- Durchlauf
@@ -226,6 +262,23 @@ class Pipeline:
         eindeutig = self.aufbereiten(roh, ergebnis)
 
         treffer, verworfen = self.bewerte(eindeutig)
+
+        # Zweiter Durchgang mit den genaueren Angaben der Detailseiten.
+        # Erst hier wird sichtbar, ob ein Inserat befristet ist – dieses Feld
+        # liefert keine Trefferliste.
+        if self.profil.betrieb.detailseiten and treffer:
+            ergebnis.detailseiten = self.vertiefe(treffer, self.profil.betrieb.max_detailabrufe)
+            if ergebnis.detailseiten:
+                treffer = [self.reichere_an(i) for i in treffer]
+                treffer, nachtraeglich = self.bewerte(treffer)
+                if nachtraeglich:
+                    logger.info(
+                        "{} Inserate fielen erst nach der Detailseite durch: {}",
+                        len(nachtraeglich),
+                        [i.bewertung.ausschlussgrund.split(" –")[0] for i in nachtraeglich],
+                    )
+                verworfen.extend(nachtraeglich)
+
         ergebnis.ausgeschlossen = len(verworfen)
         ergebnis.treffer = len(treffer)
         protokolliere_ausschluesse(verworfen)
@@ -261,7 +314,7 @@ class Pipeline:
         if entfernt:
             logger.info("{} veraltete Inserate entfernt", entfernt)
 
-        ergebnis.beendet = datetime.now(UTC)
+        ergebnis.beendet = datetime.now(timezone.utc)
         self.repo.protokolliere_lauf(ergebnis)
         logger.success(
             "Lauf beendet in {:.0f}s: {} roh -> {} eindeutig -> {} Treffer, davon {} neu",
@@ -277,7 +330,7 @@ class Pipeline:
 
 def protokolliere_ausschluesse(verworfen: list[Inserat]) -> None:
     """Zeigt, woran es lag – sonst sucht man bei null Treffern im Dunkeln."""
-
+    
     zaehler = Counter(
         (i.bewertung.ausschlussgrund or "").split(" (")[0].split(":")[0] for i in verworfen
     )

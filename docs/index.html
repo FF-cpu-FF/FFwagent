@@ -417,6 +417,9 @@ function galerienBinden(){
 }
 
 function termin(l){
+  // Ein Enddatum ist die wichtigste Einzelinformation: es macht aus einem
+  // scheinbaren Treffer eine Zwischenmiete.
+  if(l.frei_bis) return `<span class="termin-offen">befristet bis ${new Date(l.frei_bis).toLocaleDateString("de-DE")}</span>`;
   if(l.einzug_ab) return `<span class="termin-ok">ab ${new Date(l.einzug_ab).toLocaleDateString("de-DE")}</span>`;
   if(l.einzug_status==="unbekannt") return `<span class="termin-offen">Termin offen</span>`;
   return "";
@@ -451,6 +454,7 @@ function karte(l){
         ${termin(l)}
         ${l.qm_preis?`<span>${f(l.qm_preis,1)} €/m²</span>`:''}
         ${l.ki_wg_geeignet===true?'<span>WG-tauglich</span>':''}
+        ${l.detail_gelesen?'':'<span title="Nur Angaben aus der Trefferliste">Kurzangaben</span>'}
       </div>
       ${l.ki_zusammenfassung?`<p class="ki">${esc(l.ki_zusammenfassung)}</p>`:''}
       ${(l.ki_warnsignale||[]).length?`<p class="ki warn">${esc(l.ki_warnsignale.slice(0,2).join(" · "))}</p>`:''}

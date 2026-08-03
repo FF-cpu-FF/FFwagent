@@ -227,6 +227,14 @@ ki:
   erneut_bewerten: false
 
 betrieb:
+  # Für Treffer, die alle harten Regeln überstanden haben, zusätzlich die
+  # Detailseite abrufen. Nur dort stehen Verfügbarkeitszeitraum ("frei bis"),
+  # Nebenkosten, Kaution und sämtliche Bilder. Kostet pro Lauf eine Handvoll
+  # zusätzlicher Abrufe und fängt Zwischenmieten ab, die in der Trefferliste
+  # wie Dauerangebote aussehen.
+  detailseiten: true
+  max_detailabrufe: 25
+
   # Nur relevant für den optionalen Dauerbetrieb (cli dienst).
   # Der Normalbetrieb läuft auf Knopfdruck, siehe README.
   intervall_minuten: 360

@@ -9,6 +9,7 @@ from wohnungsagent.config.profil import lade_profil
 from wohnungsagent.models.domain import (
     Ausstattung,
     Einzugsstatus,
+    Geo,
     Inserat,
     Vermietertyp,
 )

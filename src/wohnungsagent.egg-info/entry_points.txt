@@ -1,0 +1,2 @@
+[console_scripts]
+wohnungsagent = wohnungsagent.cli:main

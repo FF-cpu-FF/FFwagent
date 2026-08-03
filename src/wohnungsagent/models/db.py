@@ -13,7 +13,7 @@ auch wenn ein Inserat später verschwindet.
 """
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     JSON,
@@ -30,7 +30,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 def jetzt() -> datetime:
-    return datetime.now(UTC)
+    return datetime.now(timezone.utc)
 
 
 class Basis(DeclarativeBase):
@@ -68,6 +68,9 @@ class InseratRow(Basis):
     einzug_ab: Mapped[str | None] = mapped_column(String(10))
     einzug_status: Mapped[str] = mapped_column(String(16), index=True, default="unbekannt")
     einzug_rohtext: Mapped[str | None] = mapped_column(String(200))
+    frei_bis: Mapped[str | None] = mapped_column(String(10))
+    befristet: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
+    detail_gelesen: Mapped[bool] = mapped_column(Boolean, default=False)
 
     vermietertyp: Mapped[str] = mapped_column(String(16), default="unbekannt")
     anbieter: Mapped[str | None] = mapped_column(String(200))
@@ -92,7 +95,7 @@ class InseratRow(Basis):
     gemeldet: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     aktiv: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
 
-    preise: Mapped[list[PreisRow]] = relationship(
+    preise: Mapped[list["PreisRow"]] = relationship(
         back_populates="inserat", cascade="all, delete-orphan"
     )
 

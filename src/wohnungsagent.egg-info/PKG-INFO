@@ -1,3 +1,10 @@
+Metadata-Version: 2.4
+Name: wohnungsagent
+Version: 1.0.0
+Summary: Automatisierte Wohnungssuche für Frankfurt am Main mit Ranking und KI-Bewertung
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+
 # Wohnungsagent Frankfurt
 
 Durchsucht **auf Knopfdruck** Wohnungsportale, erkennt Dubletten über
@@ -14,14 +21,9 @@ School, 3 Zimmer ab 70 m², Warmmiete 1.300–1.800 €, Einzug frühestens
 Codeänderung.
 
 ```
-config/suchprofil.yml  ──►  scrapers  ──►  anreichern  ──►  entdoppeln
-                                                                 │
-                                                          ausschließen
-                                                                 │
-                                              Detailseiten der Treffer holen
-                                              (frei bis, Nebenkosten, Bilder)
-                                                                 │
-   Telegram ◄── melden ◄── SQLite ◄── KI ◄── erneut bewerten ◄────┘
+config/suchprofil.yml   ──►  scrapers  ──►  anreichern  ──►  entdoppeln
+                                                                  │
+   Telegram ◄── melden ◄── SQLite ◄── KI ◄── bewerten ◄── ausschließen
                              │
                              ├──► Streamlit-Dashboard (Karte, Favoriten, Verlauf)
                              └──► GitHub Pages (statische Ansicht)

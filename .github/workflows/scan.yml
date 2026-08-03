@@ -58,7 +58,6 @@ jobs:
         run: |
           pip install -r requirements.txt
           pip install -e .
-          playwright install --with-deps chromium
 
       # Der Datenbestand muss zwischen den Läufen erhalten bleiben, sonst
       # gilt bei jedem Durchlauf alles wieder als neu und du bekommst

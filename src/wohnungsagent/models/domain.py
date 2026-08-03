@@ -13,13 +13,13 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass, field
-from datetime import UTC, date, datetime
-from enum import StrEnum
+from datetime import date, datetime, timezone
+from enum import Enum
 from typing import Any
 
 
 def jetzt() -> datetime:
-    return datetime.now(UTC)
+    return datetime.now(timezone.utc)
 
 
 def als_utc(zeitpunkt: datetime | None) -> datetime | None:
@@ -34,11 +34,11 @@ def als_utc(zeitpunkt: datetime | None) -> datetime | None:
     if zeitpunkt is None:
         return None
     if zeitpunkt.tzinfo is None:
-        return zeitpunkt.replace(tzinfo=UTC)
-    return zeitpunkt.astimezone(UTC)
+        return zeitpunkt.replace(tzinfo=timezone.utc)
+    return zeitpunkt.astimezone(timezone.utc)
 
 
-class Einzugsstatus(StrEnum):
+class Einzugsstatus(str, Enum):
     """Dreiwertig – "unbekannt" ist ein eigener Zustand, kein stiller Fehlschlag."""
 
     PASST = "passt"            # belegtes Datum ab dem Stichtag
@@ -46,7 +46,7 @@ class Einzugsstatus(StrEnum):
     UNBEKANNT = "unbekannt"    # kein Datum im Inserat auffindbar
 
 
-class Vermietertyp(StrEnum):
+class Vermietertyp(str, Enum):
     PRIVAT = "privat"
     GEWERBLICH = "gewerblich"
     UNBEKANNT = "unbekannt"
@@ -128,6 +128,12 @@ class Inserat:
     einzug_ab: date | None = None
     einzug_status: Einzugsstatus = Einzugsstatus.UNBEKANNT
     einzug_rohtext: str | None = None
+    # Ein Enddatum bedeutet immer Zwischenmiete. Steht nur auf der
+    # Detailseite und war der Grund, warum eine Wohnung "frei ab 19.10.2026
+    # bis 31.01.2027" als Treffer durchging.
+    frei_bis: date | None = None
+    befristet: bool = False
+    detail_gelesen: bool = False
 
     ausstattung: Ausstattung = field(default_factory=Ausstattung)
     vermietertyp: Vermietertyp = Vermietertyp.UNBEKANNT
@@ -232,6 +238,9 @@ class Inserat:
             "einzug_ab": self.einzug_ab.isoformat() if self.einzug_ab else None,
             "einzug_status": self.einzug_status.value,
             "einzug_rohtext": self.einzug_rohtext,
+            "frei_bis": self.frei_bis.isoformat() if self.frei_bis else None,
+            "befristet": self.befristet,
+            "detail_gelesen": self.detail_gelesen,
             "vermietertyp": self.vermietertyp.value,
             "anbieter": self.anbieter,
             "ausstattung": self.ausstattung.als_dict(),
@@ -281,6 +290,7 @@ class Laufergebnis:
     aktualisiert: int = 0
     preisaenderungen: list[Preisaenderung] = field(default_factory=list)
     unbrauchbar: int = 0
+    detailseiten: int = 0
     ki_aufrufe: int = 0
     ki_tokens: int = 0
     quellen_ok: list[str] = field(default_factory=list)

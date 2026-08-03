@@ -195,7 +195,7 @@ class Email(Kanal):
                 server.login(self.nutzer, self.passwort)
                 server.send_message(nachricht)
             return True
-        except Exception as fehler:
+        except Exception as fehler:  # noqa: BLE001
             logger.warning("E-Mail: {}", fehler)
             return False
 

@@ -58,7 +58,7 @@ def diagnostiziere(profil: Suchprofil, quelle: str, browser_ua: bool = False) ->
 
     try:
         html = scraper.hole(seite.url)
-    except Exception as fehler:
+    except Exception as fehler:  # noqa: BLE001
         logger.error("Abruf fehlgeschlagen: {}", fehler)
         return 1
 

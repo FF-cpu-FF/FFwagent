@@ -100,6 +100,8 @@ class Ki:
 
 @dataclass(frozen=True, slots=True)
 class Betrieb:
+    detailseiten: bool
+    max_detailabrufe: int
     intervall_minuten: int
     request_pause_sekunden: tuple[float, float]
     timeout_sekunden: int
@@ -228,6 +230,8 @@ def lade_profil(pfad: str | Path = "config/suchprofil.yml") -> Suchprofil:
             erneut_bewerten=bool(_hole(daten, "ki.erneut_bewerten", False, bool)),
         ),
         betrieb=Betrieb(
+            detailseiten=bool(_hole(daten, "betrieb.detailseiten", True, bool)),
+            max_detailabrufe=int(_hole(daten, "betrieb.max_detailabrufe", 25, int)),
             intervall_minuten=int(_hole(daten, "betrieb.intervall_minuten", 60, int)),
             request_pause_sekunden=(float(pause[0]), float(pause[1])),
             timeout_sekunden=int(_hole(daten, "betrieb.timeout_sekunden", 30, int)),

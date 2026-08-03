@@ -34,6 +34,23 @@ def regel_einzug(inserat: Inserat, profil: Suchprofil) -> str | None:
     return None
 
 
+def regel_befristung(inserat: Inserat, profil: Suchprofil) -> str | None:
+    """Zwischenmieten ausschließen.
+
+    Ein Enddatum ist ein härteres Signal als jedes Stichwort: Wer "frei bis"
+    angibt, vermietet auf Zeit. Läuft die Befristung vor oder kurz nach dem
+    Stichtag aus, ist das Angebot für einen Daueraufenthalt wertlos.
+    """
+    if inserat.frei_bis:
+        return (
+            f"befristet bis {inserat.frei_bis:%d.%m.%Y} – Zwischenmiete, "
+            f"gesucht ist ein unbefristeter Einzug ab {profil.einzug.fruehestens:%d.%m.%Y}"
+        )
+    if inserat.befristet:
+        return "als befristet gekennzeichnet"
+    return None
+
+
 def regel_zimmer(inserat: Inserat, profil: Suchprofil) -> str | None:
     if inserat.zimmer is None:
         return None
@@ -109,6 +126,7 @@ def regel_stichwoerter(inserat: Inserat, profil: Suchprofil) -> str | None:
 
 REGELN: list[tuple[str, Regel]] = [
     ("einzug", regel_einzug),
+    ("befristung", regel_befristung),
     ("stichwoerter", regel_stichwoerter),
     ("zimmer", regel_zimmer),
     ("stadtteil", regel_stadtteil),

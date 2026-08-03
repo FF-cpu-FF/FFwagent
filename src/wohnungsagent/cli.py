@@ -185,7 +185,7 @@ def befehl_diagnose(args) -> int:
 
     try:
         html = scraper.hole(seiten[0].url)
-    except Exception as fehler:
+    except Exception as fehler:  # noqa: BLE001
         logger.error("Abruf fehlgeschlagen: {}: {}", type(fehler).__name__, fehler)
         return 1
 

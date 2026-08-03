@@ -7,7 +7,7 @@ kein Python, deshalb schreibt dieser Export einen Auszug als JSON in
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from ..database.repository import Repository
@@ -20,7 +20,7 @@ def exportiere(repo: Repository, ziel: Path = Path("docs/data/listings.json"),
     laeufe = repo.laeufe(limit=1)
 
     daten = {
-        "aktualisiert": datetime.now(UTC).isoformat(timespec="seconds"),
+        "aktualisiert": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "anzahl": len(treffer),
         "letzter_lauf": {
             "gestartet": laeufe[0].gestartet.isoformat(timespec="seconds") if laeufe else None,

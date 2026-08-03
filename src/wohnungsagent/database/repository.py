@@ -6,7 +6,8 @@ Umwandlung Domäne <-> Tabelle liegt an einer Stelle statt verteilt.
 """
 from __future__ import annotations
 
-from datetime import UTC, date, datetime, timedelta
+from dataclasses import replace
+from datetime import date, datetime, timedelta, timezone
 
 from sqlalchemy import create_engine, delete, select
 from sqlalchemy.orm import Session, sessionmaker
@@ -73,7 +74,7 @@ class Repository:
                     if aktuell is not None and alt is not None and abs(alt - aktuell) >= 1.0:
                         aenderung = Preisaenderung(
                             uid=inserat.uid,
-                            zeitpunkt=datetime.now(UTC),
+                            zeitpunkt=datetime.now(timezone.utc),
                             feld=feld,
                             alt=alt,
                             neu=aktuell,
@@ -144,7 +145,7 @@ class Repository:
 
     def raeume_auf(self, tage: int) -> int:
         # Die Spalte ist zeitzonenlos, deshalb hier bewusst naiv vergleichen.
-        grenze = (datetime.now(UTC) - timedelta(days=tage)).replace(tzinfo=None)
+        grenze = (datetime.now(timezone.utc) - timedelta(days=tage)).replace(tzinfo=None)
         with self.sitzung() as sitzung:
             ergebnis = sitzung.execute(
                 delete(InseratRow).where(
@@ -248,6 +249,9 @@ def _nach_zeile(inserat: Inserat, zeile: InseratRow) -> InseratRow:
     zeile.einzug_ab = inserat.einzug_ab.isoformat() if inserat.einzug_ab else None
     zeile.einzug_status = inserat.einzug_status.value
     zeile.einzug_rohtext = inserat.einzug_rohtext
+    zeile.frei_bis = inserat.frei_bis.isoformat() if inserat.frei_bis else None
+    zeile.befristet = inserat.befristet
+    zeile.detail_gelesen = inserat.detail_gelesen
     zeile.vermietertyp = inserat.vermietertyp.value
     zeile.anbieter = inserat.anbieter
     zeile.ausstattung = inserat.ausstattung.als_dict()
@@ -293,6 +297,9 @@ def _nach_domaene(zeile: InseratRow) -> Inserat:
         einzug_ab=date.fromisoformat(zeile.einzug_ab) if zeile.einzug_ab else None,
         einzug_status=Einzugsstatus(zeile.einzug_status),
         einzug_rohtext=zeile.einzug_rohtext,
+        frei_bis=date.fromisoformat(zeile.frei_bis) if zeile.frei_bis else None,
+        befristet=bool(zeile.befristet),
+        detail_gelesen=bool(zeile.detail_gelesen),
         ausstattung=Ausstattung(**(zeile.ausstattung or {})),
         vermietertyp=Vermietertyp(zeile.vermietertyp),
         anbieter=zeile.anbieter,

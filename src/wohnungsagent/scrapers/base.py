@@ -167,13 +167,13 @@ class Scraper(ABC):
 
         try:
             pw_kontext = sync_playwright()
-        except Exception as fehler:
+        except Exception as fehler:  # noqa: BLE001
             raise QuelleBlockiert(f"{self.label}: Playwright startet nicht ({fehler})") from fehler
 
         with pw_kontext as pw:
             try:
                 browser = pw.chromium.launch(headless=True)
-            except Exception as fehler:
+            except Exception as fehler:  # noqa: BLE001
                 # Häufigster Fall: Paket installiert, Browser fehlt.
                 raise QuelleBlockiert(
                     f"{self.label} braucht den Chromium-Browser von Playwright. "
