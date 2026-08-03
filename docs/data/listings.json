@@ -1,21 +1,21 @@
 {
- "aktualisiert": "2026-08-03T10:26:42+00:00",
+ "aktualisiert": "2026-08-03T16:55:01+00:00",
  "anzahl": 5,
  "letzter_lauf": {
-  "gestartet": "2026-08-03T10:26:18",
-  "roh_gefunden": 62,
+  "gestartet": "2026-08-03T16:54:12",
+  "roh_gefunden": 94,
   "treffer": 5,
   "ki_aufrufe": 0,
   "ki_tokens": 0,
   "quellen_ok": [
+   "immowelt",
+   "immonet",
    "kleinanzeigen",
    "wg_gesucht",
    "abg"
   ],
   "quellen_fehler": {
-   "immobilienscout24": "ImmobilienScout24 antwortet mit HTTP 401 – Bot-Schutz aktiv",
-   "immowelt": "Immowelt braucht den Chromium-Browser von Playwright. Einmalig ausführen:  playwright install chromium",
-   "immonet": "Immonet braucht den Chromium-Browser von Playwright. Einmalig ausführen:  playwright install chromium"
+   "immobilienscout24": "ImmobilienScout24 antwortet mit HTTP 401 – Bot-Schutz aktiv"
   },
   "quellen_robots_blockiert": []
  },
@@ -28,13 +28,13 @@
    "titel": "Geräumige Dachgeschosswohnung in Bestlage",
    "kaltmiete": null,
    "nebenkosten": null,
-   "warmmiete": null,
+   "warmmiete": 1600.0,
    "kaution": null,
    "provision": null,
    "zimmer": null,
    "flaeche": 90.0,
    "etage": null,
-   "qm_preis": null,
+   "qm_preis": 17.78,
    "adresse": null,
    "stadtteil": "Westend-Nord",
    "plz": null,
@@ -56,22 +56,22 @@
     "wg_geeignet": null,
     "oepnv_erwaehnt": null
    },
-   "beschreibung": "Geräumige Dachgeschosswohnung in Bestlage 3-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Westend-Nord |\n                        \n                        Eschersheimer Landstraße 1600 € 19.10.2026\n                    \n                                            - 31.01.2027 90 m² Isabel Online: 1 Stunde Geräumige Dachgeschosswohnung in Bestlage 1600 € | 90 m² 3-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Westend-Nord |\n                \n                Eschersheimer Landstraße Verfügbar:\n                    19.10.2026 Diese Anz",
+   "beschreibung": "Geräumige Dachgeschosswohnung in Bestlage 3-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Westend-Nord |\n                        \n                        Eschersheimer Landstraße 1600 € 19.10.2026\n                    \n                                            - 31.01.2027 90 m² Isabel Online: 4 Stunden Geräumige Dachgeschosswohnung in Bestlage 1600 € | 90 m² 3-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Westend-Nord |\n                \n                Eschersheimer Landstraße Verfügbar:\n                    19.10.2026 Diese An",
    "bilder": [
     "https://img.wg-gesucht.de/media/up/2026/30/7fda4544597ce7802fc483fd4bb1374e090476ada172b655b4532fe0a28f121e_178535326842294675846842255992.small.JPEG"
    ],
    "merkmale": [],
    "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
+   "zuletzt_gesehen": "2026-08-03T16:55:01+00:00",
    "ist_neu": true,
-   "score": 30,
+   "score": 42,
    "score_treffer": [
     "Nordend / Westend-Nord (+25.0)",
-    "nah an der Frankfurt School (+18.0)"
+    "nah an der Frankfurt School (+18.0)",
+    "Warmmiete im Budgetkorridor (+18.0)"
    ],
    "score_abzuege": [
-    "nur 42% der Kriterien belegbar (×0.74)",
-    "warmmiete fehlt (-4.0)",
+    "nur 53% der Kriterien belegbar (×0.79)",
     "zimmer fehlt (-4.0)",
     "Einzugstermin unbestätigt (-12.0)"
    ],
@@ -89,13 +89,13 @@
    "titel": "TeilzeitWG: Möblierte Wohnung sucht BewohnerIN (Pendler)",
    "kaltmiete": null,
    "nebenkosten": null,
-   "warmmiete": null,
+   "warmmiete": 850.0,
    "kaution": null,
    "provision": null,
    "zimmer": null,
    "flaeche": 65.0,
    "etage": null,
-   "qm_preis": null,
+   "qm_preis": 13.08,
    "adresse": null,
    "stadtteil": "Nordend-Ost",
    "plz": null,
@@ -117,25 +117,83 @@
     "wg_geeignet": null,
     "oepnv_erwaehnt": null
    },
-   "beschreibung": "TeilzeitWG: Möblierte Wohnung sucht BewohnerIN (Pendler) 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Nordend-Ost |\n                        \n                        Leibnizstraße 14 850 € 01.09.2026\n                    \n                                            - 01.08.2027 65 m² DA Diana Auerswald Online: 23 Stunden TeilzeitWG: Möblierte Wohnung sucht BewohnerIN (Pendler) 850 € | 65 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Nordend-Ost |\n                \n                Leibnizstraße 14 Verfügbar:\n                ",
+   "beschreibung": "TeilzeitWG: Möblierte Wohnung sucht BewohnerIN (Pendler) 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Nordend-Ost |\n                        \n                        Leibnizstraße 14 850 € 01.09.2026\n                    \n                                            - 01.08.2027 65 m² DA Diana Auerswald Online: 1 Tag TeilzeitWG: Möblierte Wohnung sucht BewohnerIN (Pendler) 850 € | 65 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Nordend-Ost |\n                \n                Leibnizstraße 14 Verfügbar:\n                    0",
    "bilder": [
     "https://img.wg-gesucht.de/media/up/2026/29/0c02e5978f1c828e00e7718a7496bc91ae77705444fc14b47b58af6b55d5749a_F526EF06_BEAD_4814_AAEF_FC2C17FD6B91.small.jpeg"
    ],
    "merkmale": [],
    "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
+   "zuletzt_gesehen": "2026-08-03T16:55:01+00:00",
    "ist_neu": true,
-   "score": 28,
+   "score": 24,
    "score_treffer": [
     "Nordend / Westend-Nord (+25.0)",
     "nah an der Frankfurt School (+18.0)"
    ],
    "score_abzuege": [
-    "nur 42% der Kriterien belegbar (×0.74)",
-    "warmmiete fehlt (-4.0)",
+    "nur 53% der Kriterien belegbar (×0.79)",
     "zimmer fehlt (-4.0)",
     "Einzugstermin unbestätigt (-12.0)",
     "5 m² unter Wunschgröße (-2)"
+   ],
+   "ausgeschlossen": false,
+   "ausschlussgrund": null,
+   "ki_zusammenfassung": null,
+   "ki_warnsignale": [],
+   "ki_wg_geeignet": null
+  },
+  {
+   "uid": "98d26e0895cd0ef4",
+   "quelle": "wg_gesucht",
+   "externe_id": "11052385",
+   "url": "https://www.wg-gesucht.de/wohnungen-in-Frankfurt-am-Main-Maintal-Doernigheim.11052385.html",
+   "titel": "2 room modern appartment to rent for 6 - 12 months or long-term",
+   "kaltmiete": null,
+   "nebenkosten": null,
+   "warmmiete": 1350.0,
+   "kaution": null,
+   "provision": null,
+   "zimmer": null,
+   "flaeche": 70.0,
+   "etage": null,
+   "qm_preis": 19.29,
+   "adresse": null,
+   "stadtteil": "Maintal-Dörnigheim",
+   "plz": null,
+   "lat": null,
+   "lon": null,
+   "geo_quelle": "unbekannt",
+   "distanz_km": null,
+   "einzug_ab": null,
+   "einzug_status": "unbekannt",
+   "einzug_rohtext": null,
+   "vermietertyp": "unbekannt",
+   "anbieter": null,
+   "ausstattung": {
+    "balkon": null,
+    "keller": null,
+    "einbaukueche": null,
+    "aufzug": null,
+    "altbau": null,
+    "wg_geeignet": null,
+    "oepnv_erwaehnt": null
+   },
+   "beschreibung": "2 room modern appartment to rent for 6 - 12 months or long-term 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Maintal-Dörnigheim |\n                        \n                        Südring 5 1350 € 15.08.2026 70 m² Christian Reichardt Online: 1 Tag 2 room modern appartment to rent for 6 - 12 months or long-term 1350 € | 70 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Maintal-Dörnigheim |\n                \n                Südring 5 Verfügbar:\n                    15.08.2026 Diese Anzeige ist erreichbar unter: https://www.wg-",
+   "bilder": [
+    "https://img.wg-gesucht.de/media/up/2024/24/11bc16d720679d6e0b418a03e012bf8e88403016d063dfb7e86057a6f3761dcf_living_room_and_dining_area4.small.jpg"
+   ],
+   "merkmale": [],
+   "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
+   "zuletzt_gesehen": "2026-08-03T16:55:01+00:00",
+   "ist_neu": true,
+   "score": 15,
+   "score_treffer": [
+    "Warmmiete im Budgetkorridor (+18.0)"
+   ],
+   "score_abzuege": [
+    "nur 24% der Kriterien belegbar (×0.66)",
+    "zimmer fehlt (-4.0)",
+    "Einzugstermin unbestätigt (-12.0)"
    ],
    "ausgeschlossen": false,
    "ausschlussgrund": null,
@@ -187,7 +245,7 @@
     "Von Privat"
    ],
    "erstmals_gesehen": "2026-08-03T10:26:28+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
+   "zuletzt_gesehen": "2026-08-03T16:55:01+00:00",
    "ist_neu": true,
    "score": 7,
    "score_treffer": [
@@ -207,64 +265,6 @@
    "ki_wg_geeignet": null
   },
   {
-   "uid": "98d26e0895cd0ef4",
-   "quelle": "wg_gesucht",
-   "externe_id": "11052385",
-   "url": "https://www.wg-gesucht.de/wohnungen-in-Frankfurt-am-Main-Maintal-Doernigheim.11052385.html",
-   "titel": "2 room modern appartment to rent for 6 - 12 months or long-term",
-   "kaltmiete": null,
-   "nebenkosten": null,
-   "warmmiete": null,
-   "kaution": null,
-   "provision": null,
-   "zimmer": null,
-   "flaeche": 70.0,
-   "etage": null,
-   "qm_preis": null,
-   "adresse": null,
-   "stadtteil": "Maintal-Dörnigheim",
-   "plz": null,
-   "lat": null,
-   "lon": null,
-   "geo_quelle": "unbekannt",
-   "distanz_km": null,
-   "einzug_ab": null,
-   "einzug_status": "unbekannt",
-   "einzug_rohtext": null,
-   "vermietertyp": "unbekannt",
-   "anbieter": null,
-   "ausstattung": {
-    "balkon": null,
-    "keller": null,
-    "einbaukueche": null,
-    "aufzug": null,
-    "altbau": null,
-    "wg_geeignet": null,
-    "oepnv_erwaehnt": null
-   },
-   "beschreibung": "2 room modern appartment to rent for 6 - 12 months or long-term 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Maintal-Dörnigheim |\n                        \n                        Südring 5 1350 € 15.08.2026 70 m² Christian Reichardt Online: 1 Tag 2 room modern appartment to rent for 6 - 12 months or long-term 1350 € | 70 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Maintal-Dörnigheim |\n                \n                Südring 5 Verfügbar:\n                    15.08.2026 Diese Anzeige ist erreichbar unter: https://www.wg-",
-   "bilder": [
-    "https://img.wg-gesucht.de/media/up/2024/24/11bc16d720679d6e0b418a03e012bf8e88403016d063dfb7e86057a6f3761dcf_living_room_and_dining_area4.small.jpg"
-   ],
-   "merkmale": [],
-   "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
-   "ist_neu": true,
-   "score": 0,
-   "score_treffer": [],
-   "score_abzuege": [
-    "nur 13% der Kriterien belegbar (×0.61)",
-    "warmmiete fehlt (-4.0)",
-    "zimmer fehlt (-4.0)",
-    "Einzugstermin unbestätigt (-12.0)"
-   ],
-   "ausgeschlossen": false,
-   "ausschlussgrund": null,
-   "ki_zusammenfassung": null,
-   "ki_warnsignale": [],
-   "ki_wg_geeignet": null
-  },
-  {
    "uid": "db126ce5b5b49daf",
    "quelle": "wg_gesucht",
    "externe_id": "13806063",
@@ -272,13 +272,13 @@
    "titel": "2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach",
    "kaltmiete": null,
    "nebenkosten": null,
-   "warmmiete": null,
+   "warmmiete": 1070.0,
    "kaution": null,
    "provision": null,
    "zimmer": null,
    "flaeche": 60.0,
    "etage": null,
-   "qm_preis": null,
+   "qm_preis": 17.83,
    "adresse": null,
    "stadtteil": "Frankfurt",
    "plz": null,
@@ -300,21 +300,20 @@
     "wg_geeignet": null,
     "oepnv_erwaehnt": null
    },
-   "beschreibung": "2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Frankfurt |\n                        \n                        Wilhemlshöherstraße 1070 € 01.09.2026 60 m² S Verifiziert Herr Stojanovski Online: 13 Stunden 2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach 1070 € | 60 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Frankfurt |\n                \n                Wilhemlshöherstraße Verfügbar:\n                    01.09.2026 Diese Anzeige ist erreichbar unter: https://www.wg-gesucht.de",
+   "beschreibung": "2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Frankfurt |\n                        \n                        Wilhemlshöherstraße 1070 € 01.09.2026 60 m² S Verifiziert Herr Stojanovski Online: 20 Stunden 2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach 1070 € | 60 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Frankfurt |\n                \n                Wilhemlshöherstraße Verfügbar:\n                    01.09.2026 Diese Anzeige ist erreichbar unter: https://www.wg-gesucht.de",
    "bilder": [
     "https://www.wg-gesucht.de/img/placeholder/dummy_small.png"
    ],
    "merkmale": [],
    "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
+   "zuletzt_gesehen": "2026-08-03T16:55:01+00:00",
    "ist_neu": true,
    "score": 0,
    "score_treffer": [
     "Balkon (+10.0)"
    ],
    "score_abzuege": [
-    "nur 19% der Kriterien belegbar (×0.64)",
-    "warmmiete fehlt (-4.0)",
+    "nur 31% der Kriterien belegbar (×0.69)",
     "zimmer fehlt (-4.0)",
     "Einzugstermin unbestätigt (-12.0)",
     "10 m² unter Wunschgröße (-5)"
