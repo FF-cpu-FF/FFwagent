@@ -17,7 +17,7 @@ from bs4 import BeautifulSoup
 from loguru import logger
 
 from ..models.domain import Inserat
-from ..services.parsing import dezimal, euro
+from ..services.parsing import euro
 from .base import Scraper, Suchseite
 
 
@@ -114,10 +114,9 @@ class Immowelt(Scraper):
 
             titel = ""
             for kandidat in (karte.select_one("h2"), karte.select_one("h3"), link):
-                if kandidat and (text := kandidat.get_text(" ", strip=True)):
-                    if len(text) > 8:
-                        titel = text[:200]
-                        break
+                if kandidat and (text := kandidat.get_text(" ", strip=True)) and len(text) > 8:
+                    titel = text[:200]
+                    break
 
             ergebnis.append(
                 Inserat(

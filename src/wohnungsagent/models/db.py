@@ -13,7 +13,7 @@ auch wenn ein Inserat später verschwindet.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import (
     JSON,
@@ -30,7 +30,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 def jetzt() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class Basis(DeclarativeBase):
@@ -92,7 +92,7 @@ class InseratRow(Basis):
     gemeldet: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     aktiv: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
 
-    preise: Mapped[list["PreisRow"]] = relationship(
+    preise: Mapped[list[PreisRow]] = relationship(
         back_populates="inserat", cascade="all, delete-orphan"
     )
 

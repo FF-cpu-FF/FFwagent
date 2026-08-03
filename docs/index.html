@@ -10,13 +10,13 @@
 <style>
 :root{
   --papier:#FFFFFF;
-  --tinte:#0E0F11;
-  --grau:#71757C;
-  --leise:#A5A8AE;
-  --linie:#E8E8EA;
+  --tinte:#0B0C0E;
+  --grau:#4A4E55;      /* war #71757C – zu blass fuer Fliesstext */
+  --leise:#71757C;     /* war #A5A8AE – Labels waren kaum lesbar */
+  --linie:#DEDEE1;
   --akzent:#1B3BF5;
-  --warn:#B4442E;
-  --gut:#2F6B45;
+  --warn:#A3341F;
+  --gut:#1F5C38;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
@@ -96,7 +96,7 @@ select{width:auto;cursor:pointer;font-family:"Inter Tight",sans-serif}
 
 /* ── Liste ── */
 .zeile{
-  display:grid;grid-template-columns:132px 1fr auto;gap:0 26px;align-items:start;
+  display:grid;grid-template-columns:224px 1fr auto;gap:0 30px;align-items:start;
   padding:26px 0;border-bottom:1px solid var(--linie);position:relative;
 }
 .zeile:first-child{border-top:1px solid var(--linie)}
@@ -105,43 +105,59 @@ select{width:auto;cursor:pointer;font-family:"Inter Tight",sans-serif}
   width:5px;height:5px;border-radius:50%;background:var(--akzent);
 }
 @media (max-width:760px){.zeile.neu::before{left:-10px}}
-.bild,.leerbild{width:132px;height:94px;object-fit:cover;display:block;background:#F4F4F5}
+.galerie{position:relative;width:224px}
+.bild,.leerbild{width:224px;height:158px;object-fit:cover;display:block;background:#F1F1F3}
 .leerbild{
   display:grid;place-items:center;color:var(--leise);
-  font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--linie);
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--linie);
 }
+.zaehlmarke{
+  position:absolute;right:8px;bottom:8px;
+  background:rgba(11,12,14,.82);color:#fff;font-family:"JetBrains Mono",monospace;
+  font-size:10.5px;padding:2px 7px;border-radius:100px;letter-spacing:.03em;
+}
+.streifen{display:flex;gap:4px;margin-top:4px}
+.streifen img{
+  width:100%;flex:1 1 0;height:30px;object-fit:cover;cursor:pointer;
+  opacity:.5;transition:opacity .15s;background:#F1F1F3;
+}
+.streifen img:hover,.streifen img.aktiv{opacity:1}
 .kopfzeile{
-  font-family:"Instrument Serif",Georgia,serif;font-size:21px;line-height:1.25;
-  letter-spacing:-.01em;display:inline;
+  /* Die Serifenschrift blieb dem Wortzeichen vorbehalten. Im Fliesstext
+     der Liste war sie bei 21px zu zart – Titel sind jetzt kraeftig und
+     deutlich groesser, damit sie beim Ueberfliegen tragen. */
+  font-family:"Inter Tight",system-ui,sans-serif;font-weight:600;
+  font-size:25px;line-height:1.22;letter-spacing:-.022em;display:inline;
   background-image:linear-gradient(var(--tinte),var(--tinte));
   background-size:0 1px;background-repeat:no-repeat;background-position:0 100%;
   transition:background-size .25s;
 }
 .zeile:hover .kopfzeile{background-size:100% 1px}
-.fakten{margin-top:9px;display:flex;flex-wrap:wrap;gap:5px 16px;align-items:center;font-size:13px;color:var(--grau)}
-.portal{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--leise);
+.fakten{margin-top:11px;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;
+  font-size:14.5px;color:var(--grau);font-weight:450}
+.portal{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--leise);
   border:1px solid var(--linie);padding:2px 7px;border-radius:100px}
-.neu-wort{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--akzent);font-weight:500}
+.neu-wort{font-size:11.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--akzent);font-weight:500}
 .termin-ok{color:var(--gut)}
 .termin-offen{color:var(--warn)}
-.ki{margin-top:10px;font-size:14px;color:var(--grau);line-height:1.55;max-width:64ch;
-  font-family:"Instrument Serif",Georgia,serif;font-style:italic}
-.ki.warn{color:var(--warn);font-style:normal;font-family:inherit;font-size:12.5px}
+.ki{margin-top:12px;font-size:15.5px;color:var(--grau);line-height:1.6;max-width:62ch}
+.ki.warn{margin-top:8px;color:var(--warn);font-size:14px;font-weight:500}
 
 .rechts{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:14px;min-width:126px}
-.preis{font-family:"JetBrains Mono",monospace;font-size:22px;font-weight:500;letter-spacing:-.03em;line-height:1}
-.preis small{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+.preis{font-family:"JetBrains Mono",monospace;font-size:26px;font-weight:500;letter-spacing:-.03em;line-height:1}
+.preis small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--leise);margin-top:5px;font-weight:400}
-.masse{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--grau)}
+.masse{font-family:"JetBrains Mono",monospace;font-size:13.5px;color:var(--grau)}
 .score{width:100%;max-width:104px}
-.score-zahl{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--leise);
+.score-zahl{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--grau);
   display:flex;justify-content:space-between;margin-bottom:4px}
-.score-balken{height:2px;background:var(--linie);position:relative}
+.score-balken{height:3px;background:var(--linie);position:relative}
 .score-balken i{position:absolute;inset:0 auto 0 0;background:var(--tinte);display:block}
 
 @media (max-width:760px){
-  .zeile{grid-template-columns:88px 1fr;gap:0 16px}
-  .bild,.leerbild{width:88px;height:66px}
+  .zeile{grid-template-columns:1fr;gap:14px 0}
+  .galerie,.bild,.leerbild{width:100%}
+  .bild,.leerbild{height:210px}
   .rechts{grid-column:1/-1;flex-direction:row;align-items:flex-end;justify-content:space-between;
     margin-top:16px;text-align:left;width:100%}
   .kopfzeile{font-size:18px}
@@ -380,6 +396,24 @@ function zeichnen(){
     return;
   }
   $("liste").innerHTML = t.map(karte).join("");
+  galerienBinden();
+}
+
+// Vorschaubilder umschalten. Bewusst nach dem Zeichnen gebunden statt per
+// Inline-Handler – so bleibt das Markup frei von Logik.
+function galerienBinden(){
+  document.querySelectorAll(".galerie").forEach(g=>{
+    const haupt = g.querySelector(".bild");
+    const marke = g.querySelector(".zaehlmarke b");
+    g.querySelectorAll(".streifen img").forEach(mini=>{
+      mini.addEventListener("click", ()=>{
+        haupt.src = mini.src;
+        if(marke) marke.textContent = Number(mini.dataset.nr)+1;
+        g.querySelectorAll(".streifen img").forEach(x=>x.classList.remove("aktiv"));
+        mini.classList.add("aktiv");
+      });
+    });
+  });
 }
 
 function termin(l){
@@ -390,9 +424,15 @@ function termin(l){
 
 function karte(l){
   const neu = istNeu(l);
-  const bild = (l.bilder||[]).length
-    ? `<img class="bild" src="${esc(l.bilder[0])}" alt="" loading="lazy" onerror="this.outerHTML='<div class=&quot;leerbild&quot;>ohne Bild</div>'">`
-    : `<div class="leerbild">ohne Bild</div>`;
+  const bilder = (l.bilder||[]).filter(Boolean);
+  const galerie = bilder.length ? `
+    <div class="galerie" data-uid="${esc(l.uid)}">
+      <img class="bild" src="${esc(bilder[0])}" alt="" loading="lazy"
+           onerror="this.outerHTML='<div class=&quot;leerbild&quot;>ohne Bild</div>'">
+      ${bilder.length>1?`<span class="zaehlmarke"><b>1</b>/${bilder.length}</span>`:''}
+      ${bilder.length>1?`<div class="streifen">${bilder.slice(0,5).map((b,i)=>
+        `<img src="${esc(b)}" alt="" loading="lazy" class="${i===0?'aktiv':''}" data-nr="${i}">`).join("")}</div>`:''}
+    </div>` : `<div class="galerie"><div class="leerbild">ohne Bild</div></div>`;
   const m = miete(l), art = mieteArt(l);
   const masse = [
     l.zimmer ? `${f(l.zimmer, l.zimmer%1?1:0)} Zi.` : null,
@@ -401,7 +441,7 @@ function karte(l){
   ].filter(Boolean).join(" · ");
 
   return `<article class="zeile ${neu?'neu':''}">
-    <a href="${esc(l.url)}" target="_blank" rel="noopener">${bild}</a>
+    ${galerie}
     <div>
       <a href="${esc(l.url)}" target="_blank" rel="noopener"><span class="kopfzeile">${esc(l.titel)}</span></a>
       <div class="fakten">

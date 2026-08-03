@@ -6,8 +6,7 @@ Umwandlung Domäne <-> Tabelle liegt an einer Stelle statt verteilt.
 """
 from __future__ import annotations
 
-from dataclasses import replace
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 
 from sqlalchemy import create_engine, delete, select
 from sqlalchemy.orm import Session, sessionmaker
@@ -74,7 +73,7 @@ class Repository:
                     if aktuell is not None and alt is not None and abs(alt - aktuell) >= 1.0:
                         aenderung = Preisaenderung(
                             uid=inserat.uid,
-                            zeitpunkt=datetime.now(timezone.utc),
+                            zeitpunkt=datetime.now(UTC),
                             feld=feld,
                             alt=alt,
                             neu=aktuell,
@@ -145,7 +144,7 @@ class Repository:
 
     def raeume_auf(self, tage: int) -> int:
         # Die Spalte ist zeitzonenlos, deshalb hier bewusst naiv vergleichen.
-        grenze = (datetime.now(timezone.utc) - timedelta(days=tage)).replace(tzinfo=None)
+        grenze = (datetime.now(UTC) - timedelta(days=tage)).replace(tzinfo=None)
         with self.sitzung() as sitzung:
             ergebnis = sitzung.execute(
                 delete(InseratRow).where(

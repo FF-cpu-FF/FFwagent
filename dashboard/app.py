@@ -11,7 +11,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -140,7 +140,7 @@ if tabelle.empty:
 
 treffer_alle = tabelle[~tabelle["ausgeschlossen"]]
 jung = pd.to_datetime(tabelle["erstmals_gesehen"], format="mixed", utc=True) > (
-    datetime.now(timezone.utc) - timedelta(hours=24)
+    datetime.now(UTC) - timedelta(hours=24)
 )
 
 spalten = st.columns(6)
@@ -271,7 +271,7 @@ with reiter[0]:
 with reiter[1]:
     neu = sicht[
         pd.to_datetime(sicht["erstmals_gesehen"], format="mixed", utc=True)
-        > (datetime.now(timezone.utc) - timedelta(hours=48))
+        > (datetime.now(UTC) - timedelta(hours=48))
     ]
     st.caption(f"{len(neu)} Inserate der letzten 48 Stunden")
     st.dataframe(
