@@ -1,21 +1,21 @@
 {
- "aktualisiert": "2026-08-03T10:16:49+00:00",
+ "aktualisiert": "2026-08-03T10:26:42+00:00",
  "anzahl": 5,
  "letzter_lauf": {
-  "gestartet": "2026-08-03T10:16:04",
-  "roh_gefunden": 83,
+  "gestartet": "2026-08-03T10:26:18",
+  "roh_gefunden": 62,
   "treffer": 5,
   "ki_aufrufe": 0,
   "ki_tokens": 0,
   "quellen_ok": [
-   "immowelt",
-   "immonet",
    "kleinanzeigen",
    "wg_gesucht",
    "abg"
   ],
   "quellen_fehler": {
-   "immobilienscout24": "ImmobilienScout24 antwortet mit HTTP 401 – Bot-Schutz aktiv"
+   "immobilienscout24": "ImmobilienScout24 antwortet mit HTTP 401 – Bot-Schutz aktiv",
+   "immowelt": "Immowelt braucht den Chromium-Browser von Playwright. Einmalig ausführen:  playwright install chromium",
+   "immonet": "Immonet braucht den Chromium-Browser von Playwright. Einmalig ausführen:  playwright install chromium"
   },
   "quellen_robots_blockiert": []
  },
@@ -61,8 +61,8 @@
     "https://img.wg-gesucht.de/media/up/2026/30/7fda4544597ce7802fc483fd4bb1374e090476ada172b655b4532fe0a28f121e_178535326842294675846842255992.small.JPEG"
    ],
    "merkmale": [],
-   "erstmals_gesehen": "2026-08-03T10:16:45+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:16:49+00:00",
+   "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
+   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
    "ist_neu": true,
    "score": 30,
    "score_treffer": [
@@ -122,8 +122,8 @@
     "https://img.wg-gesucht.de/media/up/2026/29/0c02e5978f1c828e00e7718a7496bc91ae77705444fc14b47b58af6b55d5749a_F526EF06_BEAD_4814_AAEF_FC2C17FD6B91.small.jpeg"
    ],
    "merkmale": [],
-   "erstmals_gesehen": "2026-08-03T10:16:45+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:16:49+00:00",
+   "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
+   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
    "ist_neu": true,
    "score": 28,
    "score_treffer": [
@@ -186,8 +186,8 @@
    "merkmale": [
     "Von Privat"
    ],
-   "erstmals_gesehen": "2026-08-03T10:16:37+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:16:49+00:00",
+   "erstmals_gesehen": "2026-08-03T10:26:28+00:00",
+   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
    "ist_neu": true,
    "score": 7,
    "score_treffer": [
@@ -247,8 +247,8 @@
     "https://img.wg-gesucht.de/media/up/2024/24/11bc16d720679d6e0b418a03e012bf8e88403016d063dfb7e86057a6f3761dcf_living_room_and_dining_area4.small.jpg"
    ],
    "merkmale": [],
-   "erstmals_gesehen": "2026-08-03T10:16:45+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:16:49+00:00",
+   "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
+   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
    "ist_neu": true,
    "score": 0,
    "score_treffer": [],
@@ -305,8 +305,8 @@
     "https://www.wg-gesucht.de/img/placeholder/dummy_small.png"
    ],
    "merkmale": [],
-   "erstmals_gesehen": "2026-08-03T10:16:45+00:00",
-   "zuletzt_gesehen": "2026-08-03T10:16:49+00:00",
+   "erstmals_gesehen": "2026-08-03T10:26:35+00:00",
+   "zuletzt_gesehen": "2026-08-03T10:26:42+00:00",
    "ist_neu": true,
    "score": 0,
    "score_treffer": [
