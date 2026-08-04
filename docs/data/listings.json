@@ -1,21 +1,21 @@
 {
- "aktualisiert": "2026-08-03T17:45:53+00:00",
- "anzahl": 2,
+ "aktualisiert": "2026-08-04T10:04:52+00:00",
+ "anzahl": 3,
  "letzter_lauf": {
-  "gestartet": "2026-08-03T17:45:02",
-  "roh_gefunden": 82,
-  "treffer": 2,
+  "gestartet": "2026-08-04T10:03:34",
+  "roh_gefunden": 92,
+  "treffer": 3,
   "ki_aufrufe": 0,
   "ki_tokens": 0,
   "quellen_ok": [
    "immowelt",
-   "immonet",
    "kleinanzeigen",
    "wg_gesucht",
    "abg"
   ],
   "quellen_fehler": {
-   "immobilienscout24": "ImmobilienScout24 antwortet mit HTTP 401 – Bot-Schutz aktiv"
+   "immobilienscout24": "ImmobilienScout24 antwortet mit HTTP 401 – Bot-Schutz aktiv",
+   "immonet": "Error: Page.goto: net::ERR_NETWORK_CHANGED at https://www.immonet.de/suche/frankfurt-am-main/wohnungen/mieten?d=true&sd=DESC&sf=TIMESTAMP&pma=1800&pmi=909&ami=60&rmi=2&rma=4&sp=2\nCall log:\n  - navigating to \"https://www.immonet.de/suche/frankfurt-am-main/wohnungen/mieten?d=true&sd=DESC&sf=TIMESTAMP&pma=1800&pmi=909&ami=60&rmi=2&rma=4&sp=2\", waiting until \"domcontentloaded\"\n"
   },
   "quellen_robots_blockiert": []
  },
@@ -59,7 +59,7 @@
     "wg_geeignet": null,
     "oepnv_erwaehnt": null
    },
-   "beschreibung": "2 room modern appartment to rent for 6 - 12 months or long-term 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Maintal-Dörnigheim |\n                        \n                        Südring 5 1350 € 15.08.2026 70 m² Christian Reichardt Online: 1 Tag 2 room modern appartment to rent for 6 - 12 months or long-term 1350 € | 70 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Maintal-Dörnigheim |\n                \n                Südring 5 Verfügbar:\n                    15.08.2026 Diese Anzeige ist erreichbar unter: https://www.wg-",
+   "beschreibung": "2 room modern appartment to rent for 6 - 12 months or long-term 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Maintal-Dörnigheim |\n                        \n                        Südring 5 1350 € 15.08.2026 70 m² Christian Reichardt Online: 2 Tage 2 room modern appartment to rent for 6 - 12 months or long-term 1350 € | 70 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Maintal-Dörnigheim |\n                \n                Südring 5 Verfügbar:\n                    15.08.2026 Diese Anzeige ist erreichbar unter: https://www.wg",
    "bilder": [
     "https://img.wg-gesucht.de/media/up/2024/24/11bc16d720679d6e0b418a03e012bf8e88403016d063dfb7e86057a6f3761dcf_living_room_and_dining_area4.sized.jpg",
     "https://www.wg-gesucht.de/img/kooperationen/schufa/partner.png",
@@ -72,7 +72,7 @@
    ],
    "merkmale": [],
    "erstmals_gesehen": "2026-08-03T17:14:05+00:00",
-   "zuletzt_gesehen": "2026-08-03T17:45:53+00:00",
+   "zuletzt_gesehen": "2026-08-04T10:04:52+00:00",
    "ist_neu": true,
    "score": 24,
    "score_treffer": [
@@ -82,6 +82,79 @@
    "score_abzuege": [
     "nur 36% der Kriterien belegbar (×0.71)",
     "Einzugstermin unbestätigt (-12.0)"
+   ],
+   "ausgeschlossen": false,
+   "ausschlussgrund": null,
+   "ki_zusammenfassung": null,
+   "ki_warnsignale": [],
+   "ki_wg_geeignet": null
+  },
+  {
+   "uid": "1e805214c00b00ab",
+   "quelle": "kleinanzeigen",
+   "externe_id": "3464286830",
+   "url": "https://www.kleinanzeigen.de/s-anzeige/schoene-2-zimmerwhg-westend-sued/3464286830-203-16304",
+   "titel": "Schöne 2 Zimmerwhg.- Westend Süd",
+   "kaltmiete": 1200.0,
+   "nebenkosten": 300.0,
+   "warmmiete": 1500.0,
+   "kaution": 2700.0,
+   "provision": null,
+   "zimmer": 2.0,
+   "flaeche": 64.0,
+   "etage": null,
+   "qm_preis": 18.75,
+   "adresse": "60325 Gallusviertel",
+   "stadtteil": null,
+   "plz": "60325",
+   "lat": 50.1176,
+   "lon": 8.6588,
+   "geo_quelle": "plz",
+   "distanz_km": 2.314,
+   "einzug_ab": null,
+   "einzug_status": "unbekannt",
+   "einzug_rohtext": null,
+   "frei_bis": null,
+   "befristet": false,
+   "detail_gelesen": true,
+   "vermietertyp": "privat",
+   "anbieter": null,
+   "ausstattung": {
+    "balkon": null,
+    "keller": null,
+    "einbaukueche": null,
+    "aufzug": null,
+    "altbau": null,
+    "wg_geeignet": null,
+    "oepnv_erwaehnt": null
+   },
+   "beschreibung": "Diese schöne 2-Zimmerwohnung befindet sich in einem modernen und gepflegten Wohnhaus im Frankfurter...",
+   "bilder": [
+    "https://img.kleinanzeigen.de/api/v1/prod-ads/images/cf/cf96aa47-6e6d-4fb9-a088-c76020f67f47?rule=$_59.JPG",
+    "https://img.kleinanzeigen.de/api/v1/prod-ads/images/cf/cf96aa47-6e6d-4fb9-a088-c76020f67f47?rule=$_59.AUTO",
+    "https://img.kleinanzeigen.de/api/v1/prod-ads/images/a5/a571e3fe-5924-4e76-aef3-c931a8847a0b?rule=$_59.AUTO",
+    "https://img.kleinanzeigen.de/api/v1/prod-ads/images/90/90c54e30-7f66-4311-8ed0-233fe0da6ebc?rule=$_59.AUTO",
+    "https://img.kleinanzeigen.de/api/v1/prod-ads/images/d1/d1b2285e-4e49-4b37-a705-2433856a638f?rule=$_59.AUTO",
+    "https://img.kleinanzeigen.de/api/v1/prod-ads/images/6e/6ed77e65-1d1d-4a8c-9b52-8bb3bbe56d26?rule=$_59.AUTO",
+    "https://img.kleinanzeigen.de/api/v1/prod-ads/images/04/04ba0b5b-0199-4623-9eac-dd02c9b32dfc?rule=$_59.AUTO",
+    "https://img.kleinanzeigen.de/api/v1/prod-ads/images/8c/8c45f4ab-4554-42e0-9684-a0e729f969a8?rule=$_59.AUTO"
+   ],
+   "merkmale": [
+    "Von Privat"
+   ],
+   "erstmals_gesehen": "2026-08-03T17:13:59+00:00",
+   "zuletzt_gesehen": "2026-08-04T10:04:52+00:00",
+   "ist_neu": true,
+   "score": 20,
+   "score_treffer": [
+    "Warmmiete im Budgetkorridor (+18.0)",
+    "ausreichend Bilder (+10.0)",
+    "privater Vermieter (+10.0)"
+   ],
+   "score_abzuege": [
+    "nur 55% der Kriterien belegbar (×0.80)",
+    "Einzugstermin unbestätigt (-12.0)",
+    "6 m² unter Wunschgröße (-3)"
    ],
    "ausgeschlossen": false,
    "ausschlussgrund": null,
@@ -128,18 +201,18 @@
     "wg_geeignet": null,
     "oepnv_erwaehnt": null
    },
-   "beschreibung": "2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Frankfurt |\n                        \n                        Wilhemlshöherstraße 1070 € 01.09.2026 60 m² S Verifiziert Herr Stojanovski Online: 21 Stunden 2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach 1070 € | 60 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Frankfurt |\n                \n                Wilhemlshöherstraße Verfügbar:\n                    01.09.2026 Diese Anzeige ist erreichbar unter: https://www.wg-gesucht.de",
+   "beschreibung": "2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach 2-Zimmer-Wohnung \n                         |\n\n                                                                                    Frankfurt am Main\n                            \n                            Frankfurt |\n                        \n                        Wilhemlshöherstraße 1070 € 01.09.2026 60 m² S Verifiziert Herr Stojanovski Online: 13 Stunden 2‐Zimmer‐Wohnung mit Balkon in Frankfurt‐Seckbach 1070 € | 60 m² 2-Zimmer-Wohnung \n                 |\n\n                                                            Frankfurt am Main\n                    \n                    Frankfurt |\n                \n                Wilhemlshöherstraße Verfügbar:\n                    01.09.2026 Diese Anzeige ist erreichbar unter: https://www.wg-gesucht.de",
    "bilder": [
     "https://img.wg-gesucht.de/",
     "https://www.wg-gesucht.de/img/kooperationen/schufa/partner.png",
     "https://www.wg-gesucht.de/t_ph.html?qrup=grap36&id=13806063",
+    "https://img.wg-gesucht.de/media/up/2025/35/e3151a22fb1647bcbbeeb36d3203ea1d7ce214b78781cc73c7e4040141ab29c9_175716444209594673604209520789.small.JPEG",
     "https://img.wg-gesucht.de/media/up/2026/14/3bae08dc33c4c0db5b0ea88d99c7ef066ecbe43d643aee19bb27a7da96f289c9_177593079110294675359110294824.small.JPEG",
-    "https://img.wg-gesucht.de/media/up/2026/25/17ee9cb7209015fa91d13c2515166435258bd4d616a5eea4c0d77fe8282cde5e_178231843967294674763967211155.small.JPEG",
     "https://img.wg-gesucht.de/media/up/2026/28/6fb1d31e07b38ca2963ac35293af05456af6515d919b4ded6e055bb485942c8c_178438554802894674114802851009.small.JPEG"
    ],
    "merkmale": [],
    "erstmals_gesehen": "2026-08-03T17:14:05+00:00",
-   "zuletzt_gesehen": "2026-08-03T17:45:53+00:00",
+   "zuletzt_gesehen": "2026-08-04T10:04:52+00:00",
    "ist_neu": true,
    "score": 2,
    "score_treffer": [
